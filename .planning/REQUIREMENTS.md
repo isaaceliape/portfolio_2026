@@ -108,12 +108,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| FOUND-01 | Phase 2 | Pending |
-| FOUND-02 | Phase 2 | Pending |
-| FOUND-03 | Phase 2 | Pending |
-| FOUND-04 | Phase 2 | Pending |
+| FOUND-01 | Phase 1 | Pending |
+| FOUND-02 | Phase 1 | Pending |
+| FOUND-03 | Phase 1 | Pending |
+| FOUND-04 | Phase 1 | Pending |
 | NAV-01 | Phase 2 | Pending |
-| NAV-02 | Phase 4 | Pending |
+| NAV-02 | Phase 2 | Pending |
 | NAV-03 | Phase 2 | Pending |
 | NAV-04 | Phase 2 | Pending |
 | PROJ-01 | Phase 3 | Pending |
@@ -132,20 +132,22 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ANIM-05 | Phase 4 | Pending |
 | ANIM-06 | Phase 4 | Pending |
 | ANIM-07 | Phase 4 | Pending |
-| THEME-01 | Phase 1-2 | Pending |
-| THEME-02 | Phase 2 | Pending |
-| THEME-03 | Phase 2 | Pending |
+| THEME-01 | Phase 4 | Pending |
+| THEME-02 | Phase 1 | Pending |
+| THEME-03 | Phase 4 | Pending |
 | THEME-04 | Phase 1 | Pending |
-| TECH-01 | Phase 2 | Pending |
-| TECH-02 | Phase 2 | Pending |
-| TECH-03 | Phase 2 | Pending |
-| TECH-04 | Phase 2 | Pending |
+| TECH-01 | Phase 1 | Pending |
+| TECH-02 | Phase 1 | Pending |
+| TECH-03 | Phase 1 | Pending |
+| TECH-04 | Phase 1 | Pending |
 
 **Coverage:**
 - v1 requirements: 31 total
-- Mapped to phases: (pending roadmap)
-- Unmapped: (pending roadmap)
+- Mapped to phases: 31
+- Unmapped: 0
+- Coverage: 100%
 
 ---
+
 *Requirements defined: 2026-03-03*
-*Last updated: 2026-03-03 after initial definition*
+*Last updated: 2026-03-03 after roadmap creation*
