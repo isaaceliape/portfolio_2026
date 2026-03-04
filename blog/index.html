@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0c0c0c" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f9f9fb" media="(prefers-color-scheme: light)" />
+    <title>Blog — Isaac Eliape</title>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://isaaceliape.github.io/portfolio_2026/blog/" />
+    <meta property="og:title" content="Blog — Isaac Eliape" />
+    <meta property="og:description" content="Thoughts on frontend engineering, accessibility, AI, and building for the web." />
+    <meta property="og:site_name" content="Isaac Eliape Portfolio" />
+    <meta property="og:image" content="https://isaaceliape.github.io/portfolio_2026/og_image_dark.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Isaac Eliape - Frontend Engineer Portfolio" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://isaaceliape.github.io/portfolio_2026/blog/" />
+    <meta property="twitter:title" content="Blog — Isaac Eliape" />
+    <meta property="twitter:description" content="Thoughts on frontend engineering, accessibility, AI, and building for the web." />
+    <meta property="twitter:image" content="https://isaaceliape.github.io/portfolio_2026/og_image_dark.png" />
+    <meta property="twitter:image:alt" content="Isaac Eliape - Frontend Engineer Portfolio" />
+
+    <!-- Preconnect to Google Fonts for faster loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Prevent Flash of Wrong Theme (FOUC) -->
+    <script>
+      (function() {
+        const STORAGE_KEY = 'portfolio-theme';
+
+        // Get saved theme or detect system preference
+        let theme;
+        try {
+          theme = localStorage.getItem(STORAGE_KEY);
+        } catch (e) {
+          // Silent fail for private browsing
+        }
+
+        if (!theme) {
+          theme = window.matchMedia('(prefers-color-scheme: light)').matches
+            ? 'light'
+            : 'dark';
+        }
+
+        // Apply immediately before body renders
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
+    <!-- Critical CSS loaded first -->
+    <link rel="stylesheet" href="../css/critical.css" />
+    <!-- Non-critical CSS loaded asynchronously -->
+    <link rel="stylesheet" href="../css/base.css" media="print" onload="this.media='all'" />
+    <link rel="stylesheet" href="../css/layout.css" media="print" onload="this.media='all'" />
+    <link rel="stylesheet" href="../css/components.css" media="print" onload="this.media='all'" />
+
+    <noscript>
+      <link rel="stylesheet" href="../css/critical.css" />
+      <link rel="stylesheet" href="../css/base.css" />
+      <link rel="stylesheet" href="../css/layout.css" />
+      <link rel="stylesheet" href="../css/components.css" />
+    </noscript>
+  </head>
+  <body>
+    <!-- Skip to main content for keyboard users (WCAG 2.4.1) -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Screen reader announcements for dynamic content -->
+    <div aria-live="polite" aria-atomic="true" class="sr-only" id="palette-announce"></div>
+
+    <div id="cursor-glow"></div>
+    <div id="vim-indicator">-- NORMAL --</div>
+
+    <div
+      id="palette-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Command Palette"
+    >
+      <div id="palette">
+        <div id="palette-header">
+          <span class="pal-icon">⌘</span>
+          <input
+            id="palette-input"
+            type="text"
+            placeholder="Search commands, posts, contact..."
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <span id="palette-shortcut"><kbd>ESC</kbd> to close</span>
+        </div>
+        <div id="palette-results"></div>
+        <div id="palette-footer">
+          <span class="pal-hint"><kbd>↑</kbd><kbd>↓</kbd> navigate</span>
+          <span class="pal-hint"><kbd>↵</kbd> open</span>
+          <span class="pal-hint"><kbd>ESC</kbd> close</span>
+        </div>
+      </div>
+    </div>
+
+    <nav aria-label="Main navigation">
+      <a href="../index.html" class="nav-logo"
+        ><span class="user">ieliape</span
+        ><span class="sep">@</span>portfolio<span class="muted">:~$</span></a
+      >
+      <div class="nav-links">
+        <a href="../index.html#about" aria-label="Go to About section">about</a>
+        <a href="../index.html#projects" aria-label="Go to Projects section">projects</a>
+        <a href="index.html" aria-label="Blog" aria-current="page">blog</a>
+        <a href="../index.html#contact" aria-label="Go to Contact section">contact</a>
+        <span
+          class="kbd-hint"
+          id="nav-palette-btn"
+          role="button"
+          tabindex="0"
+          aria-label="Open command palette"
+        >
+          ⌘ Ctrl+Shift+P
+        </span>
+        <button
+          id="theme-toggle"
+          class="theme-toggle"
+          aria-label="Switch to light mode"
+          type="button"
+        >
+          ☀
+        </button>
+      </div>
+    </nav>
+
+    <main id="main-content">
+      <section id="blog-index" aria-label="Blog posts">
+        <div class="prompt reveal">
+          <span class="ps1"
+            ><span class="user">ieliape</span><span class="sep">@</span
+            ><span>mbp</span><span class="sep">:</span
+            ><span class="dir">~/blog</span><span class="sep">$</span></span
+          >
+          <span class="cmd">ls -la posts/</span>
+        </div>
+
+        <div class="blog-list">
+          <article class="blog-card reveal d1">
+            <header class="blog-card-header">
+              <h2 class="blog-card-title">
+                <a href="post-1.html">Building Accessible React Components</a>
+              </h2>
+              <time class="blog-card-date" datetime="2026-03-04">March 4, 2026</time>
+            </header>
+            <p class="blog-card-excerpt">
+              Accessibility isn't an afterthought—it's a foundation. In this post, I explore
+              practical patterns for building React components that work for everyone,
+              from semantic HTML to keyboard navigation and ARIA attributes that actually help.
+            </p>
+            <a class="blog-card-link" href="post-1.html">Read more →</a>
+          </article>
+
+          <article class="blog-card reveal d2">
+            <header class="blog-card-header">
+              <h2 class="blog-card-title">
+                <a href="post-2.html">The Future of AI in Web Development</a>
+              </h2>
+              <time class="blog-card-date" datetime="2026-03-04">March 4, 2026</time>
+            </header>
+            <p class="blog-card-excerpt">
+              AI is reshaping how we build for the web. From code generation to intelligent
+              design systems, I examine where AI adds value and where human creativity
+              remains irreplaceable in the development process.
+            </p>
+            <a class="blog-card-link" href="post-2.html">Read more →</a>
+          </article>
+
+          <article class="blog-card reveal d3">
+            <header class="blog-card-header">
+              <h2 class="blog-card-title">
+                <a href="post-3.html">Optimizing Performance in Modern JavaScript</a>
+              </h2>
+              <time class="blog-card-date" datetime="2026-03-04">March 4, 2026</time>
+            </header>
+            <p class="blog-card-excerpt">
+              Performance isn't just about bundle size. I dive into Core Web Vitals,
+              lazy loading strategies, and practical techniques for keeping
+              JavaScript applications fast and responsive at scale.
+            </p>
+            <a class="blog-card-link" href="post-3.html">Read more →</a>
+          </article>
+        </div>
+
+        <div class="blog-nav reveal">
+          <a href="../index.html" class="btn">← Back to Portfolio</a>
+        </div>
+      </section>
+    </main>
+
+    <footer role="contentinfo">© 2026 <span>Isaac Eliape</span> · exit 0</footer>
+
+    <script type="module" src="../js/app.js"></script>
+  </body>
+</html>
