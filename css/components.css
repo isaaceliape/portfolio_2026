@@ -682,3 +682,144 @@ footer span {
     background 0.3s;
   opacity: 0;
 }
+
+/* ==========================================================================
+   Blog Post Component
+   ========================================================================== */
+.blog-post {
+  max-width: 720px;
+  margin: 0 auto;
+  padding-top: 6rem;
+  padding-bottom: 4rem;
+}
+
+.blog-post-header {
+  margin-bottom: 2rem;
+}
+
+.blog-post-title {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.blog-post-meta {
+  display: flex;
+  gap: 1rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.blog-post-content {
+  line-height: 1.8;
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+.blog-post-content h2 {
+  color: var(--accent2);
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.blog-post-content p {
+  margin-bottom: 1.25rem;
+}
+
+.blog-post-content code {
+  background: var(--surface2);
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+  color: var(--accent);
+  font-size: 0.85em;
+}
+
+.blog-post-content pre {
+  background: var(--surface);
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-bright);
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+}
+
+.blog-post-content pre code {
+  background: transparent;
+  padding: 0;
+  color: inherit;
+}
+
+.blog-post-content ul,
+.blog-post-content ol {
+  margin-bottom: 1.25rem;
+  padding-left: 1.5rem;
+}
+
+.blog-post-content li {
+  margin-bottom: 0.5rem;
+}
+
+.blog-post-content .lead {
+  font-size: 1.05rem;
+  color: var(--text);
+  margin-bottom: 1.5rem;
+}
+
+.blog-post-footer {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+
+.blog-post-tags {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.blog-tag {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 3px;
+  border: 1px solid var(--border-bright);
+  color: var(--accent2);
+  transition:
+    border-color 0.2s,
+    color 0.2s;
+}
+
+.blog-tag:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.blog-post-nav {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.blog-post-nav .btn {
+  font-size: 0.85rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--border-bright);
+  border-radius: 4px;
+  color: var(--muted);
+  transition: all 0.2s;
+  background: transparent;
+  font-family: inherit;
+  cursor: pointer;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.blog-post-nav .btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 6%, transparent);
+}
