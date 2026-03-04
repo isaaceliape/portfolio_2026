@@ -3,6 +3,9 @@
 A sleek, single-page portfolio website with a terminal/CLI aesthetic. Built as a pure HTML file with no dependencies, build tools, or external assets.
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![Live Demo](https://img.shields.io/badge/demo-live-green.svg)
+
+** Live Demo:** [isaaceliape.github.io/portfolio_2026](https://isaaceliape.github.io/portfolio_2026/)
 
 ## Features
 
