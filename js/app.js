@@ -1,9 +1,9 @@
 /** Main application logic - palette, navigation, vim mode, event handlers */
 
-import { DATA, resolveAction } from './data.js';
-import { fuzzy, esc, highlight } from './utils.js';
-import { initAnimations } from './animations.js';
-import { initTheme, toggleTheme } from './theme.js';
+import { DATA, resolveAction } from "./data.js";
+import { fuzzy, esc, highlight } from "./utils.js";
+import { initAnimations } from "./animations.js";
+import { initTheme, toggleTheme } from "./theme.js";
 
 // DOM Element References
 const glowEl = document.getElementById("cursor-glow");
@@ -60,9 +60,7 @@ export function toggleVim() {
  */
 function itemHTML(item, idx, titleHtml, subHtml) {
   const sub = subHtml !== null ? subHtml : esc(item.sub);
-  const badge = item.action
-    ? '<span class="pal-item-badge">↵ open</span>'
-    : "";
+  const badge = item.action ? '<span class="pal-item-badge">↵ open</span>' : "";
   return `<div class="pal-item" data-idx="${idx}">
   <span class="pal-item-icon">${item.icon}</span>
   <span class="pal-item-body">
@@ -89,9 +87,7 @@ function setActive(idx) {
   activeIdx = idx;
   document
     .querySelectorAll(".pal-item")
-    .forEach((el) =>
-      el.classList.toggle("active", +el.dataset.idx === idx),
-    );
+    .forEach((el) => el.classList.toggle("active", +el.dataset.idx === idx));
 }
 
 /**
@@ -137,9 +133,7 @@ function render(query) {
         return (
           `<div class="pal-section-label">${cat}</div>` +
           items
-            .map((item) =>
-              itemHTML(item, DATA.indexOf(item), item.title, null),
-            )
+            .map((item) => itemHTML(item, DATA.indexOf(item), item.title, null))
             .join("")
         );
       })
@@ -186,9 +180,11 @@ function render(query) {
 
   // Announce results to screen readers
   if (filtered.length > 0) {
-    announce(`${filtered.length} result${filtered.length === 1 ? '' : 's'} found`);
+    announce(
+      `${filtered.length} result${filtered.length === 1 ? "" : "s"} found`,
+    );
   } else if (q) {
-    announce('No results found');
+    announce("No results found");
   }
 }
 
@@ -198,13 +194,13 @@ function render(query) {
  */
 function trapFocus(element) {
   const focusableElements = element.querySelectorAll(
-    'a[href], button, textarea, input[type="text"], input[type="radio"], input[type="checkbox"], select, [tabindex]:not([tabindex="-1"])'
+    'a[href], button, textarea, input[type="text"], input[type="radio"], input[type="checkbox"], select, [tabindex]:not([tabindex="-1"])',
   );
   const firstFocusable = focusableElements[0];
   const lastFocusable = focusableElements[focusableElements.length - 1];
 
-  element.addEventListener('keydown', function(e) {
-    if (e.key !== 'Tab') return;
+  element.addEventListener("keydown", function (e) {
+    if (e.key !== "Tab") return;
 
     if (e.shiftKey) {
       if (document.activeElement === firstFocusable) {
@@ -252,11 +248,7 @@ function setupEventListeners() {
     );
 
     // Toggle palette with Ctrl/Cmd+Shift+P
-    if (
-      (e.ctrlKey || e.metaKey) &&
-      e.shiftKey &&
-      e.key.toLowerCase() === "p"
-    ) {
+    if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === "p") {
       e.preventDefault();
       paletteOpen ? closePalette() : openPalette();
       return;
@@ -358,30 +350,34 @@ function init() {
   initTheme();
   initAnimations();
   setupEventListeners();
-  
+
   // ASCII Art and Contact Info in Console
+  // Get current accent color from CSS variables (changes with theme)
+  const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#00d4aa';
+  const textColor = getComputedStyle(document.documentElement).getPropertyValue('--text').trim() || '#c8c8c8';
+
   console.log(
     `%c
-██╗  ██╗ ██╗ ██████╗  ███████╗     ███╗   ███╗ ███████╗
-██║  ██║ ██║ ██╔══██╗ ██╔════╝     ████╗ ████║ ██╔════╝
-███████║ ██║ ██████╔╝ █████╗       ██╔████╔██║ █████╗
-██╔══██║ ██║ ██╔══██╗ ██╔══╝       ██║╚██╔╝██║ ██╔══╝
-██║  ██║ ██║ ██║  ██║ ███████╗     ██║ ╚═╝ ██║ ███████╗
-╚═╝  ╚═╝ ╚═╝ ╚═╝  ╚═╝ ╚══════╝     ╚═╝     ╚═╝ ╚══════╝
+ ██╗  ██╗ ██╗ ██████╗  ███████╗     ███╗   ███╗ ███████╗             ██████╗
+ ██║  ██║ ██║ ██╔══██╗ ██╔════╝     ████╗ ████║ ██╔════╝     ██████╗ ██╔══██╗
+ ███████║ ██║ ██████╔╝ █████╗       ██╔████╔██║ █████╗       ╚═════╝ ██║  ██║
+ ██╔══██║ ██║ ██╔══██╗ ██╔══╝       ██║╚██╔╝██║ ██╔══╝       ██████╗ ██║  ██║
+ ██║  ██║ ██║ ██║  ██║ ███████╗     ██║ ╚═╝ ██║ ███████╗     ╚═════╝ ██████╔╝
+ ╚═╝  ╚═╝ ╚═╝ ╚═╝  ╚═╝ ╚══════╝     ╚═╝     ╚═╝ ╚══════╝             ╚═════╝
     `,
-    'color: #00d4aa; font-family: monospace; font-weight: bold;'
+    `color: ${accentColor}; font-family: monospace; font-weight: bold;`,
   );
-  
+
   console.log(
     `%c👋 Hello! Thanks for checking out my portfolio.\n\n` +
-    `📧 Email: isaaceliape@me.com\n` +
-    `💼 LinkedIn: linkedin.com/in/isaaceliape\n` +
-    `💻 GitHub: github.com/isaaceliape\n` +
-    `🐦 X/Twitter: x.com/isaaceliape\n\n` +
-    `Open to new opportunities, collaborations & frontend chat!`,
-    'color: #c8c8c8; font-family: "JetBrains Mono", monospace; font-size: 13px;'
+      `📧 Email: isaaceliape@me.com\n` +
+      `💼 LinkedIn: linkedin.com/in/isaaceliape\n` +
+      `💻 GitHub: github.com/isaaceliape\n` +
+      `🐦 X/Twitter: x.com/isaaceliape\n\n` +
+      `Open to new opportunities, collaborations & frontend chat!`,
+    `color: ${textColor}; font-family: "JetBrains Mono", monospace; font-size: 13px;`,
   );
-  
+
   console.log("Portfolio app initialized");
 }
 
