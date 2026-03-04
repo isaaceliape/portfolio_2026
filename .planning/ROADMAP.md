@@ -34,7 +34,15 @@
 4. Portfolio achieves Lighthouse score of 90+ and page loads in under 3 seconds on 4G connection
 5. Code organized into separate files: `index.html` (markup), `styles.css` (styling), `script.js` (JavaScript), with no inline styles or scripts
 
-**Plans:** TBD
+**Plans:** 6 plans in 5 waves
+
+**Plan list:**
+- [ ] 01-foundation-01-PLAN.md — CSS Extraction & Organization (Wave 1)
+- [ ] 01-foundation-02-PLAN.md — JavaScript Modularization (Wave 1)
+- [ ] 01-foundation-03-PLAN.md — Theme System with Persistence (Wave 2)
+- [ ] 01-foundation-04-PLAN.md — Accessibility & WCAG 2.1 AA (Wave 3)
+- [ ] 01-foundation-05-PLAN.md — Responsive Design Polish (Wave 3)
+- [ ] 01-foundation-06-PLAN.md — Performance Optimization & Verification (Wave 4-5)
 
 ---
 
