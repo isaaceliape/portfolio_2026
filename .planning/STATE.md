@@ -34,7 +34,7 @@
 
 **Current Phase:** 05-blog-structure
 **Current Plan:** 05-blog-structure-01 — Complete
-**Last Activity:** 2026-03-04 — Completed quick task 1: add a robots file that will deliver an markdown version of my site
+**Last Activity:** 2026-03-04 — Completed quick task 2: add the blog link to the header nav
 
 **Progress:**
 ```
@@ -106,6 +106,7 @@ None — milestone initialized.
 | # | Description | Date | Commit | Directory |
 |---|-------------|------|--------|-----------|
 | 1 | add a robots file that will deliver an markdown version of my site | 2026-03-04 | 1df3a63 | [1-add-a-robots-file-that-will-deliver-an-m](./quick/1-add-a-robots-file-that-will-deliver-an-m/) |
+| 2 | add the blog link to the header nav | 2026-03-04 | 064add6 | [2-add-the-blog-link-to-the-header-nav](./quick/2-add-the-blog-link-to-the-header-nav/) |
 
 ### Todos (Milestone v1.1)
 
