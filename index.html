@@ -8,6 +8,29 @@
       href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap"
       rel="stylesheet"
     />
+    <!-- Prevent Flash of Wrong Theme (FOUC) -->
+    <script>
+      (function() {
+        const STORAGE_KEY = 'portfolio-theme';
+
+        // Get saved theme or detect system preference
+        let theme;
+        try {
+          theme = localStorage.getItem(STORAGE_KEY);
+        } catch (e) {
+          // Silent fail for private browsing
+        }
+
+        if (!theme) {
+          theme = window.matchMedia('(prefers-color-scheme: light)').matches
+            ? 'light'
+            : 'dark';
+        }
+
+        // Apply immediately before body renders
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
     <!-- Critical CSS will be inlined here in Plan 01-05 -->
     <link rel="stylesheet" href="css/base.css" />
     <link rel="stylesheet" href="css/layout.css" />
