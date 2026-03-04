@@ -96,6 +96,14 @@
   justify-content: center;
 }
 
+.kbd-hint .kbd-hint-desktop {
+  display: block;
+}
+
+.kbd-hint .kbd-hint-mobile {
+  display: none;
+}
+
 .kbd-hint:hover {
   border-color: var(--accent);
   color: var(--accent);
