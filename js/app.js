@@ -23,6 +23,24 @@ let gPressed = false;
 let gTimer = null;
 
 /**
+ * Update command palette button text based on user's operating system
+ * Shows "⌘+Shift+P" on Mac and "Ctrl+Shift+P" on Windows/Linux
+ */
+function updatePaletteHint() {
+  const paletteBtn = document.getElementById("nav-palette-btn");
+  if (!paletteBtn) return;
+
+  const isMac = navigator.platform.startsWith("Mac") || 
+                navigator.platform === "iPhone" || 
+                navigator.platform === "iPad";
+  
+  const desktopHint = paletteBtn.querySelector(".kbd-hint-desktop");
+  if (desktopHint) {
+    desktopHint.textContent = isMac ? "⌘+Shift+P" : "Ctrl+Shift+P";
+  }
+}
+
+/**
  * Navigate to a section by selector
  * @param {string} id - CSS selector for the target element
  */
@@ -400,6 +418,7 @@ function init() {
   initTheme(refreshConsoleOnThemeChange);
   initAnimations();
   setupEventListeners();
+  updatePaletteHint();
 
   printConsoleArt();
   console.log("Portfolio app initialized");
