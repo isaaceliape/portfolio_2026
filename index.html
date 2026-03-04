@@ -134,6 +134,18 @@
         max-width: 860px;
         margin: 0 auto;
       }
+      
+      /* CLS Optimizations - reserve space for dynamic content */
+      #tw {
+        min-height: 1.2em;
+        display: inline-block;
+      }
+      
+      /* Prevent layout shifts from images */
+      img {
+        max-width: 100%;
+        height: auto;
+      }
     </style>
     <!-- Non-critical CSS loaded asynchronously -->
     <link rel="stylesheet" href="css/base.css" media="print" onload="this.media='all'" />
