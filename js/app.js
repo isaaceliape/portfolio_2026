@@ -358,6 +358,30 @@ function init() {
   initTheme();
   initAnimations();
   setupEventListeners();
+  
+  // ASCII Art and Contact Info in Console
+  console.log(
+    `%c
+██╗  ██╗ ██╗ ██████╗  ███████╗     ███╗   ███╗ ███████╗         ██╗      ███████╗ ████████╗ █╗  ███████╗     ████████╗  █████╗  ██╗      ██╗  ██╗             ██████╗
+██║  ██║ ██║ ██╔══██╗ ██╔════╝     ████╗ ████║ ██╔════╝         ██║      ██╔════╝ ╚══██╔══╝ ╚╝  ██╔════╝     ╚══██╔══╝ ██╔══██╗ ██║      ██║ ██╔╝     ██████╗ ██╔══██╗
+███████║ ██║ ██████╔╝ █████╗       ██╔████╔██║ █████╗           ██║      █████╗      ██║        ███████╗        ██║    ███████║ ██║      █████╔╝      ╚═════╝ ██║  ██║
+██╔══██║ ██║ ██╔══██╗ ██╔══╝       ██║╚██╔╝██║ ██╔══╝           ██║      ██╔══╝      ██║        ╚════██║        ██║    ██╔══██║ ██║      ██╔═██╗      ██████╗ ██║  ██║
+██║  ██║ ██║ ██║  ██║ ███████╗     ██║ ╚═╝ ██║ ███████╗ ▄█╗     ███████╗ ███████╗    ██║        ███████║        ██║    ██║  ██║ ███████╗ ██║  ██╗     ╚═════╝ ██████╔╝
+╚═╝  ╚═╝ ╚═╝ ╚═╝  ╚═╝ ╚══════╝     ╚═╝     ╚═╝ ╚══════╝ ▀═╝     ╚══════╝ ╚══════╝    ╚═╝        ╚══════╝        ╚═╝    ╚═╝  ╚═╝ ╚══════╝ ╚═╝  ╚═╝             ╚═════╝
+    `,
+    'color: #00d4aa; font-family: monospace; font-weight: bold;'
+  );
+  
+  console.log(
+    `%c👋 Hello! Thanks for checking out my portfolio.\n\n` +
+    `📧 Email: isaaceliape@me.com\n` +
+    `💼 LinkedIn: linkedin.com/in/isaaceliape\n` +
+    `💻 GitHub: github.com/isaaceliape\n` +
+    `🐦 X/Twitter: x.com/isaaceliape\n\n` +
+    `Open to new opportunities, collaborations & frontend chat!`,
+    'color: #c8c8c8; font-family: "JetBrains Mono", monospace; font-size: 13px;'
+  );
+  
   console.log("Portfolio app initialized");
 }
 
