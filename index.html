@@ -1,0 +1,1709 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Isaac Eliape – Frontend Engineer</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --bg: #0c0c0c;
+        --surface: #111;
+        --surface2: #161616;
+        --border: #1e1e1e;
+        --border-bright: #2e2e2e;
+        --text: #c8c8c8;
+        --muted: #555;
+        --accent: #00d4aa;
+        --accent2: #7c6af7;
+        --warn: #e5a84b;
+        --err: #e06c75;
+        --term-bar: #161616;
+        --scanline: rgba(0, 0, 0, 0.04);
+        --glow-color: rgba(0, 212, 170, 0.05);
+      }
+
+      @media (prefers-color-scheme: light) {
+        :root:not([data-theme]) {
+          --bg: #f9f9fb;
+          --surface: #ffffff;
+          --surface2: #f0f1f5;
+          --border: #dde0ea;
+          --border-bright: #c8ccd8;
+          --text: #2c2f3d;
+          --muted: #8b90a8;
+          --accent: #008ec4;
+          --accent2: #7c5af5;
+          --warn: #da6800;
+          --err: #d43552;
+          --term-bar: #e8eaf0;
+          --scanline: rgba(0, 0, 0, 0.015);
+          --glow-color: rgba(0, 142, 196, 0.06);
+        }
+      }
+      :root[data-theme="light"] {
+        --bg: #f9f9fb;
+        --surface: #ffffff;
+        --surface2: #f0f1f5;
+        --border: #dde0ea;
+        --border-bright: #c8ccd8;
+        --text: #2c2f3d;
+        --muted: #8b90a8;
+        --accent: #008ec4;
+        --accent2: #7c5af5;
+        --warn: #da6800;
+        --err: #d43552;
+        --term-bar: #e8eaf0;
+        --scanline: rgba(0, 0, 0, 0.015);
+        --glow-color: rgba(0, 142, 196, 0.06);
+      }
+      :root[data-theme="dark"] {
+        --bg: #0c0c0c;
+        --surface: #111;
+        --surface2: #161616;
+        --border: #1e1e1e;
+        --border-bright: #2e2e2e;
+        --text: #c8c8c8;
+        --muted: #555;
+        --accent: #00d4aa;
+        --accent2: #7c6af7;
+        --warn: #e5a84b;
+        --err: #e06c75;
+        --term-bar: #161616;
+        --scanline: rgba(0, 0, 0, 0.04);
+        --glow-color: rgba(0, 212, 170, 0.05);
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: "JetBrains Mono", "Fira Code", monospace;
+        font-size: 14px;
+        line-height: 1.7;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+        transition:
+          background 0.3s,
+          color 0.3s;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: 9000;
+        pointer-events: none;
+        background: repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 2px,
+          var(--scanline) 2px,
+          var(--scanline) 4px
+        );
+      }
+      #cursor-glow {
+        position: fixed;
+        pointer-events: none;
+        z-index: 9001;
+        width: 350px;
+        height: 350px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          var(--glow-color) 0%,
+          transparent 70%
+        );
+        transform: translate(-50%, -50%);
+        transition:
+          left 0.06s,
+          top 0.06s;
+      }
+
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.8rem 2rem;
+        background: color-mix(in srgb, var(--bg) 88%, transparent);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border);
+        animation: slideDown 0.5s ease both;
+        transition:
+          background 0.3s,
+          border-color 0.3s;
+      }
+      @keyframes slideDown {
+        from {
+          transform: translateY(-100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+      .nav-logo {
+        color: var(--accent);
+        font-size: 0.85rem;
+        font-weight: 700;
+      }
+      .nav-logo span {
+        color: var(--muted);
+      }
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+        align-items: center;
+      }
+      .nav-links a {
+        font-size: 0.75rem;
+        color: var(--muted);
+        transition: color 0.2s;
+      }
+      .nav-links a::before {
+        content: "./";
+        color: var(--accent);
+      }
+      .nav-links a:hover {
+        color: var(--accent);
+      }
+      .kbd-hint {
+        font-size: 0.65rem;
+        color: var(--muted);
+        border: 1px solid var(--border-bright);
+        border-radius: 4px;
+        padding: 0.15rem 0.45rem;
+        cursor: pointer;
+        transition:
+          border-color 0.2s,
+          color 0.2s;
+      }
+      .kbd-hint:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      section {
+        padding: 6rem 2rem;
+        max-width: 860px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+      }
+
+      .term {
+        background: var(--surface);
+        border: 1px solid var(--border-bright);
+        border-radius: 8px;
+        overflow: hidden;
+        transition:
+          background 0.3s,
+          border-color 0.3s;
+      }
+      .term-bar {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.6rem 1rem;
+        background: var(--term-bar);
+        border-bottom: 1px solid var(--border);
+        transition: background 0.3s;
+      }
+      .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+      }
+      .dot-r {
+        background: #e06c75;
+      }
+      .dot-y {
+        background: #e5a84b;
+      }
+      .dot-g {
+        background: #98c379;
+      }
+      .term-title {
+        font-size: 0.7rem;
+        color: var(--muted);
+        margin: 0 auto;
+      }
+      .term-body {
+        padding: 1.5rem;
+      }
+      .prompt {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem;
+        margin-bottom: 0.3rem;
+      }
+      .ps1 {
+        color: var(--accent);
+        white-space: nowrap;
+      }
+      .ps1 .user {
+        color: var(--accent2);
+      }
+      .ps1 .sep {
+        color: var(--muted);
+      }
+      .ps1 .dir {
+        color: var(--warn);
+      }
+      .cmd {
+        color: var(--text);
+      }
+      .output {
+        padding-left: 1.2rem;
+        margin-bottom: 1.4rem;
+      }
+      .output p {
+        color: var(--muted);
+        font-size: 0.85rem;
+        margin-bottom: 0.25rem;
+      }
+      .output p .hl {
+        color: var(--text);
+      }
+      .output p .acc {
+        color: var(--accent);
+      }
+      .output p .acc2 {
+        color: var(--accent2);
+      }
+      .output p .wrn {
+        color: var(--warn);
+      }
+
+      #hero {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding-top: 5rem;
+      }
+      .ascii {
+        color: var(--accent);
+        font-size: clamp(0.45rem, 1.2vw, 0.7rem);
+        line-height: 1.2;
+        margin-bottom: 1.5rem;
+        white-space: pre;
+        opacity: 0;
+        animation: fadeUp 0.6s 0.2s ease forwards;
+        transition: color 0.3s;
+      }
+      .hero-term {
+        opacity: 0;
+        animation: fadeUp 0.6s 0.5s ease forwards;
+      }
+      .typewriter-cursor {
+        display: inline-block;
+        width: 9px;
+        height: 1.1em;
+        background: var(--accent);
+        vertical-align: text-bottom;
+        animation: blink 1s step-end infinite;
+        margin-left: 2px;
+        transition: background 0.3s;
+      }
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0;
+        }
+      }
+      .hero-btns {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-top: 1rem;
+        padding-left: 1.2rem;
+        opacity: 0;
+        animation: fadeUp 0.6s 1.8s ease forwards;
+      }
+      .cli-btn {
+        font-family: inherit;
+        font-size: 0.8rem;
+        padding: 0.5rem 1.1rem;
+        border-radius: 4px;
+        border: 1px solid var(--border-bright);
+        background: transparent;
+        color: var(--text);
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .cli-btn::before {
+        content: "$ ";
+        color: var(--accent);
+      }
+      .cli-btn:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+        background: color-mix(in srgb, var(--accent) 6%, transparent);
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(20px);
+        transition:
+          opacity 0.6s ease,
+          transform 0.6s ease;
+      }
+      .reveal.visible {
+        opacity: 1;
+        transform: none;
+      }
+      .d1 {
+        transition-delay: 0.05s;
+      }
+      .d2 {
+        transition-delay: 0.12s;
+      }
+      .d3 {
+        transition-delay: 0.19s;
+      }
+      .d4 {
+        transition-delay: 0.26s;
+      }
+
+      .projects-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+      .proj {
+        border: 1px solid var(--border-bright);
+        border-radius: 6px;
+        padding: 1.2rem;
+        background: var(--surface);
+        position: relative;
+        overflow: hidden;
+        transition:
+          border-color 0.2s,
+          transform 0.25s,
+          box-shadow 0.25s,
+          background 0.3s;
+      }
+      .proj::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          var(--accent),
+          var(--accent2),
+          transparent
+        );
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.35s ease;
+      }
+      .proj:hover {
+        border-color: var(--accent);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+      }
+      .proj:hover::before {
+        transform: scaleX(1);
+      }
+      .proj-name {
+        color: var(--accent);
+        font-size: 0.85rem;
+        font-weight: 700;
+        margin-bottom: 0.4rem;
+      }
+      .proj-name::before {
+        content: "> ";
+        color: var(--muted);
+      }
+      .proj-desc {
+        font-size: 0.8rem;
+        color: var(--muted);
+        margin-bottom: 0.9rem;
+      }
+      .proj-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.35rem;
+        margin-bottom: 0.9rem;
+      }
+      .proj-tag {
+        font-size: 0.65rem;
+        padding: 0.15rem 0.5rem;
+        border-radius: 3px;
+        border: 1px solid var(--border-bright);
+        color: var(--accent2);
+        transition:
+          border-color 0.3s,
+          color 0.3s;
+      }
+      .proj-link {
+        font-size: 0.75rem;
+        color: var(--muted);
+        transition: color 0.2s;
+      }
+      .proj-link:hover {
+        color: var(--accent);
+      }
+
+      .contact-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+      }
+      .contact-row {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        font-size: 0.85rem;
+        padding: 0.6rem 0.8rem;
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        transition:
+          border-color 0.2s,
+          background 0.2s,
+          transform 0.2s;
+      }
+      .contact-row:hover {
+        border-color: var(--accent);
+        background: color-mix(in srgb, var(--accent) 5%, transparent);
+        transform: translateX(4px);
+      }
+      .contact-row .lbl {
+        color: var(--muted);
+        width: 80px;
+        flex-shrink: 0;
+        white-space: nowrap;
+      }
+      .contact-row .val {
+        color: var(--accent);
+        white-space: nowrap;
+      }
+
+      footer {
+        text-align: center;
+        padding: 1.5rem;
+        font-size: 0.7rem;
+        color: var(--muted);
+        border-top: 1px solid var(--border);
+        position: relative;
+        z-index: 1;
+        transition: border-color 0.3s;
+      }
+      footer span {
+        color: var(--accent);
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      #palette-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        background: color-mix(in srgb, var(--bg) 60%, transparent);
+        backdrop-filter: blur(6px);
+        align-items: flex-start;
+        justify-content: center;
+        padding-top: 12vh;
+      }
+      #palette-overlay.open {
+        display: flex;
+        animation: palIn 0.15s ease;
+      }
+      @keyframes palIn {
+        from {
+          opacity: 0;
+          transform: translateY(-8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      #palette {
+        width: min(640px, 92vw);
+        background: var(--surface);
+        border: 1px solid var(--border-bright);
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.2);
+        transition:
+          background 0.3s,
+          border-color 0.3s;
+      }
+      #palette-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.9rem 1.1rem;
+        border-bottom: 1px solid var(--border);
+      }
+      #palette-header .pal-icon {
+        color: var(--accent);
+        font-size: 0.9rem;
+        flex-shrink: 0;
+      }
+      #palette-input {
+        flex: 1;
+        background: transparent;
+        border: none;
+        outline: none;
+        font-family: inherit;
+        font-size: 0.9rem;
+        color: var(--text);
+        caret-color: var(--accent);
+      }
+      #palette-input::placeholder {
+        color: var(--muted);
+      }
+      #palette-shortcut {
+        font-size: 0.65rem;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+      #palette-results {
+        max-height: 380px;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: var(--border-bright) transparent;
+      }
+      #palette-results:empty::after {
+        content: "No results found.";
+        display: block;
+        padding: 1.5rem;
+        text-align: center;
+        font-size: 0.8rem;
+        color: var(--muted);
+      }
+      .pal-section-label {
+        font-size: 0.65rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--muted);
+        padding: 0.6rem 1.1rem 0.3rem;
+        background: var(--surface2);
+        transition: background 0.3s;
+      }
+      .pal-item {
+        display: flex;
+        align-items: center;
+        gap: 0.9rem;
+        padding: 0.65rem 1.1rem;
+        cursor: pointer;
+        border-left: 2px solid transparent;
+        transition:
+          background 0.12s,
+          border-color 0.12s;
+      }
+      .pal-item:hover,
+      .pal-item.active {
+        background: color-mix(in srgb, var(--accent) 7%, transparent);
+        border-left-color: var(--accent);
+      }
+      .pal-item-icon {
+        font-size: 0.85rem;
+        width: 1.2rem;
+        text-align: center;
+        flex-shrink: 0;
+        color: var(--accent2);
+      }
+      .pal-item-body {
+        flex: 1;
+        min-width: 0;
+      }
+      .pal-item-title {
+        font-size: 0.82rem;
+        color: var(--text);
+      }
+      .pal-item-title mark {
+        background: transparent;
+        color: var(--accent);
+        font-weight: 700;
+      }
+      .pal-item-sub {
+        font-size: 0.72rem;
+        color: var(--muted);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .pal-item-badge {
+        font-size: 0.62rem;
+        padding: 0.1rem 0.45rem;
+        border-radius: 3px;
+        border: 1px solid var(--border-bright);
+        color: var(--muted);
+        flex-shrink: 0;
+      }
+      #palette-footer {
+        display: flex;
+        gap: 1.5rem;
+        align-items: center;
+        padding: 0.6rem 1.1rem;
+        border-top: 1px solid var(--border);
+        background: var(--surface2);
+        transition: background 0.3s;
+      }
+      .pal-hint {
+        font-size: 0.65rem;
+        color: var(--muted);
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+      }
+      .pal-hint kbd {
+        background: var(--border-bright);
+        border-radius: 3px;
+        padding: 0.1rem 0.35rem;
+        font-family: inherit;
+        font-size: 0.62rem;
+        color: var(--text);
+      }
+
+      #vim-indicator {
+        position: fixed;
+        bottom: 1.2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 9998;
+        font-family: inherit;
+        font-size: 0.72rem;
+        background: var(--surface);
+        border: 1px solid var(--border-bright);
+        color: var(--accent);
+        padding: 0.35rem 0.9rem;
+        border-radius: 4px;
+        pointer-events: none;
+        letter-spacing: 0.05em;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        transition:
+          opacity 0.3s,
+          background 0.3s;
+        opacity: 0;
+      }
+
+      @media (max-width: 620px) {
+        nav {
+          padding: 0.7rem 1rem;
+        }
+        section {
+          padding: 4rem 1rem;
+        }
+        .projects-grid {
+          grid-template-columns: 1fr;
+        }
+        .ascii {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="cursor-glow"></div>
+    <div id="vim-indicator">-- NORMAL --</div>
+
+    <div
+      id="palette-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Command Palette"
+    >
+      <div id="palette">
+        <div id="palette-header">
+          <span class="pal-icon">⌘</span>
+          <input
+            id="palette-input"
+            type="text"
+            placeholder="Search commands, projects, contact..."
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <span id="palette-shortcut"
+            ><kbd
+              style="
+                background: var(--border-bright);
+                border-radius: 3px;
+                padding: 0.1rem 0.35rem;
+                font-family: inherit;
+                font-size: 0.62rem;
+              "
+              >ESC</kbd
+            >
+            to close</span
+          >
+        </div>
+        <div id="palette-results"></div>
+        <div id="palette-footer">
+          <span class="pal-hint"><kbd>↑</kbd><kbd>↓</kbd> navigate</span>
+          <span class="pal-hint"><kbd>↵</kbd> open</span>
+          <span class="pal-hint"><kbd>ESC</kbd> close</span>
+        </div>
+      </div>
+    </div>
+
+    <nav>
+      <span class="nav-logo"
+        ><span class="user">ieliape</span
+        ><span class="sep">@</span>portfolio<span style="color: var(--muted)"
+          >:~$</span
+        ></span
+      >
+      <div class="nav-links">
+        <a href="#about">about</a>
+        <a href="#projects">projects</a>
+        <a href="#contact">contact</a>
+        <span class="kbd-hint" id="nav-palette-btn">⌘ Ctrl+Shift+P</span>
+      </div>
+    </nav>
+
+    <section id="hero">
+      <pre class="ascii">
+ ██╗ ███████╗  █████╗   █████╗   ██████╗
+ ██║ ██╔════╝ ██╔══██╗ ██╔══██╗ ██╔════╝
+ ██║ ███████╗ ███████║ ███████║ ██║
+ ██║ ╚════██║ ██╔══██║ ██╔══██║ ██║
+ ██║ ███████║ ██║  ██║ ██║  ██║ ╚██████╗
+ ╚═╝ ╚══════╝ ╚═╝  ╚═╝ ╚═╝  ╚═╝  ╚═════╝
+
+ ███████╗ ██╗      ██╗  █████╗  ██████╗  ███████╗
+ ██╔════╝ ██║      ██║ ██╔══██╗ ██╔══██╗ ██╔════╝
+ █████╗   ██║      ██║ ███████║ ██████╔╝ █████╗
+ ██╔══╝   ██║      ██║ ██╔══██║ ██╔═══╝  ██╔══╝
+ ███████╗ ███████╗ ██║ ██║  ██║ ██║      ███████╗
+ ╚══════╝ ╚══════╝ ╚═╝ ╚═╝  ╚═╝ ╚═╝      ╚══════╝</pre
+      >
+
+      <div class="hero-term">
+        <div class="prompt">
+          <span class="ps1"
+            ><span class="user">ieliape</span><span class="sep">@</span
+            ><span>mbp</span><span class="sep">:</span
+            ><span class="dir">~/portfolio</span
+            ><span class="sep">$</span></span
+          >
+          <span class="cmd">whoami</span>
+        </div>
+        <div class="output">
+          <p><span class="hl">Isaac Eliape</span> — Frontend Engineer</p>
+          <p>
+            <span class="acc">10+</span> years of commercial experience building
+            UIs that ship.
+          </p>
+          <p>
+            Based in <span class="wrn">Dublin, Ireland 🇮🇪</span> · Originally
+            from <span class="wrn">Brazil 🇧🇷</span>
+          </p>
+          <p>
+            Bilingual <span class="acc2">PT</span> /
+            <span class="acc2">EN</span> · Currently @
+            <span class="hl">Unum Ireland</span>
+          </p>
+        </div>
+        <div class="prompt">
+          <span class="ps1"
+            ><span class="user">ieliape</span><span class="sep">@</span
+            ><span>mbp</span><span class="sep">:</span
+            ><span class="dir">~/portfolio</span
+            ><span class="sep">$</span></span
+          >
+          <span class="cmd">cat skills.txt</span>
+        </div>
+        <div class="output">
+          <p>
+            <span class="acc">specialisms:</span>
+            <span class="hl">UI Engineering · Web Apps · Landing Pages</span>
+          </p>
+          <p>
+            <span class="acc">stack:</span>
+            <span class="hl">JavaScript · CSS · HTML · React · TypeScript</span>
+          </p>
+          <p>
+            <span class="acc">extras:</span>
+            <span class="hl"
+              >Animations · API Integrations · CMS · Accessibility</span
+            >
+          </p>
+          <p>
+            <span class="acc">awards:</span>
+            <span class="wrn"
+              >2× Cannes Lions · 3× Awwwards · CSS Awards · Site Inspire</span
+            >
+          </p>
+        </div>
+        <div class="prompt">
+          <span class="ps1"
+            ><span class="user">ieliape</span><span class="sep">@</span
+            ><span>mbp</span><span class="sep">:</span
+            ><span class="dir">~/portfolio</span
+            ><span class="sep">$</span></span
+          >
+          <span class="cmd"
+            ><span id="tw"></span><span class="typewriter-cursor"></span
+          ></span>
+        </div>
+      </div>
+      <div class="hero-btns">
+        <a href="#projects" class="cli-btn">view-work</a>
+        <a href="#contact" class="cli-btn">get-in-touch</a>
+      </div>
+    </section>
+
+    <section id="about">
+      <div class="term reveal">
+        <div class="term-bar">
+          <span class="dot dot-r"></span><span class="dot dot-y"></span
+          ><span class="dot dot-g"></span>
+          <span class="term-title">about.sh — bash</span>
+        </div>
+        <div class="term-body">
+          <div class="prompt">
+            <span class="ps1"
+              ><span class="user">ieliape</span><span class="sep">@</span
+              ><span>mbp</span><span class="sep">:</span
+              ><span class="dir">~/portfolio</span
+              ><span class="sep">$</span></span
+            >
+            <span class="cmd">./about.sh</span>
+          </div>
+          <div class="output">
+            <p><span class="acc">[INFO]</span> Loading profile...</p>
+            <p></p>
+            <p>
+              I'm a <span class="hl">Brazilian Frontend Developer</span> living
+              in Dublin with 10+
+            </p>
+            <p>
+              years of hands-on commercial experience building interfaces that
+              are
+            </p>
+            <p>fast, accessible, and polished.</p>
+            <p></p>
+            <p>
+              I specialise in <span class="acc">UI engineering</span> — from
+              SPAs and landing pages to
+            </p>
+            <p>complex web apps with rich animations and API integrations.</p>
+            <p></p>
+            <p>
+              <span class="acc">education:</span>
+              <span class="hl"
+                >B.Sc. Systems and Web Technologies · Centro Universitário
+                Senac</span
+              >
+            </p>
+            <p>
+              <span class="acc">employer:</span>
+              <span class="hl">Unum Ireland</span>
+            </p>
+            <p>
+              <span class="acc">languages:</span>
+              <span class="acc2">Portuguese (native)</span> ·
+              <span class="acc2">English (fluent)</span>
+            </p>
+            <p></p>
+            <p>
+              <span class="acc">[OK]</span>
+              <span class="hl">Profile loaded successfully.</span>
+            </p>
+          </div>
+          <div class="prompt">
+            <span class="ps1"
+              ><span class="user">ieliape</span><span class="sep">@</span
+              ><span>mbp</span><span class="sep">:</span
+              ><span class="dir">~/portfolio</span
+              ><span class="sep">$</span></span
+            >
+            <span class="cmd">cat tools.txt</span>
+          </div>
+          <div class="output">
+            <p><span class="acc"># tools I love to use</span></p>
+            <p></p>
+            <p>
+              <span class="acc">editor:</span> <span class="hl">Zed</span>
+              <span style="color: var(--muted)"
+                >— fast, minimal, multiplayer-ready code editor</span
+              >
+            </p>
+            <p>
+              <span class="acc">terminal:</span>
+              <span class="hl">Ghostty</span>
+              <span style="color: var(--muted)"
+                >— GPU-accelerated terminal with native feel</span
+              >
+            </p>
+            <p>
+              <span class="acc">ai:</span> <span class="hl">Opencode</span>
+              <span style="color: var(--muted)"
+                >— AI coding agent that lives in the terminal</span
+              >
+            </p>
+            <p>
+              <span class="acc">multiplexer:</span
+              ><span class="hl"> Tmux</span>
+              <span style="color: var(--muted)"
+                >— persistent sessions, panes &amp; windows</span
+              >
+            </p>
+            <p>
+              <span class="acc">cli:</span>
+              <span class="hl"
+                >fzf · ripgrep · eza · bat · zoxide · jq · git</span
+              >
+            </p>
+            <p></p>
+            <p>
+              <span style="color: var(--muted)"
+                ># if it runs in a terminal, I probably use it.</span
+              >
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects">
+      <div class="prompt reveal">
+        <span class="ps1"
+          ><span class="user">ieliape</span><span class="sep">@</span
+          ><span>mbp</span><span class="sep">:</span
+          ><span class="dir">~/projects</span><span class="sep">$</span></span
+        >
+        <span class="cmd">ls -la ./work</span>
+      </div>
+      <div class="projects-grid">
+        <div class="proj reveal d1">
+          <p class="proj-name">sclp.co</p>
+          <p class="proj-desc">
+            Curated UI engineering work — web apps, landing pages, animations
+            and CMS integrations.
+          </p>
+          <div class="proj-tags">
+            <span class="proj-tag">JavaScript</span
+            ><span class="proj-tag">CSS/HTML</span
+            ><span class="proj-tag">Animations</span
+            ><span class="proj-tag">CMS</span>
+          </div>
+          <a class="proj-link" href="http://www.isaaceliape.com" target="_blank"
+            >↗ open isaaceliape.com</a
+          >
+        </div>
+        <div class="proj reveal d2">
+          <p class="proj-name">touch-typing-tool</p>
+          <p class="proj-desc">
+            Web-based tool for practising and improving typing speed and
+            accuracy.
+          </p>
+          <div class="proj-tags">
+            <span class="proj-tag">JavaScript</span
+            ><span class="proj-tag">Web App</span>
+          </div>
+          <a
+            class="proj-link"
+            href="https://github.com/isaaceliape"
+            target="_blank"
+            >↗ open github</a
+          >
+        </div>
+        <div class="proj reveal d3">
+          <p class="proj-name">task-time-tracker</p>
+          <p class="proj-desc">
+            Converts task time into monetary value — visualising time lost and
+            gained across your workday.
+          </p>
+          <div class="proj-tags">
+            <span class="proj-tag">JavaScript</span
+            ><span class="proj-tag">SPA</span
+            ><span class="proj-tag">Productivity</span>
+          </div>
+          <a
+            class="proj-link"
+            href="https://github.com/isaaceliape"
+            target="_blank"
+            >↗ open github</a
+          >
+        </div>
+        <div class="proj reveal d4">
+          <p class="proj-name">unum-ireland</p>
+          <p class="proj-desc">
+            Scalable, accessible UI components and web experiences for a global
+            insurance platform.
+          </p>
+          <div class="proj-tags">
+            <span class="proj-tag">React</span
+            ><span class="proj-tag">TypeScript</span
+            ><span class="proj-tag">Accessibility</span>
+          </div>
+          <a class="proj-link" href="https://www.unum.com" target="_blank"
+            >↗ open unum.com</a
+          >
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="term reveal">
+        <div class="term-bar">
+          <span class="dot dot-r"></span><span class="dot dot-y"></span
+          ><span class="dot dot-g"></span>
+          <span class="term-title">contact.sh — bash</span>
+        </div>
+        <div class="term-body">
+          <div class="prompt">
+            <span class="ps1"
+              ><span class="user">ieliape</span><span class="sep">@</span
+              ><span>mbp</span><span class="sep">:</span
+              ><span class="dir">~/portfolio</span
+              ><span class="sep">$</span></span
+            >
+            <span class="cmd">cat contact.json</span>
+          </div>
+          <div class="output" style="margin-bottom: 1rem">
+            <p>
+              <span style="color: var(--muted)"
+                ># Open to new opportunities, collaborations &amp; frontend
+                chat.</span
+              >
+            </p>
+          </div>
+          <div class="contact-grid">
+            <a class="contact-row" href="mailto:isaaceliape@me.com"
+              ><span class="lbl">email</span
+              ><span class="val">isaaceliape@me.com</span></a
+            >
+            <a
+              class="contact-row"
+              href="https://linkedin.com/in/isaaceliape"
+              target="_blank"
+              ><span class="lbl">linkedin</span
+              ><span class="val">linkedin.com/in/isaaceliape</span></a
+            >
+            <a
+              class="contact-row"
+              href="https://github.com/isaaceliape"
+              target="_blank"
+              ><span class="lbl">github</span
+              ><span class="val">github.com/isaaceliape</span></a
+            >
+            <a
+              class="contact-row"
+              href="https://x.com/isaaceliape"
+              target="_blank"
+              ><span class="lbl">x / twitter</span
+              ><span class="val">@isaaceliape</span></a
+            >
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>© 2026 <span>Isaac Eliape</span> · exit 0</footer>
+
+    <script>
+      const glowEl = document.getElementById("cursor-glow");
+      const overlay = document.getElementById("palette-overlay");
+      const input = document.getElementById("palette-input");
+      const results = document.getElementById("palette-results");
+      const vimEl = document.getElementById("vim-indicator");
+
+      document.addEventListener("mousemove", (e) => {
+        glowEl.style.left = e.clientX + "px";
+        glowEl.style.top = e.clientY + "px";
+      });
+
+      const twLines = ["ls projects/", "open sclp.co", "ssh ieliape@work"];
+      let twLi = 0,
+        twCi = 0,
+        twDel = false;
+      const twEl = document.getElementById("tw");
+      function type() {
+        const line = twLines[twLi];
+        if (!twDel) {
+          twEl.textContent = line.slice(0, ++twCi);
+          if (twCi === line.length) {
+            twDel = true;
+            setTimeout(type, 1800);
+            return;
+          }
+          setTimeout(type, 90);
+        } else {
+          twEl.textContent = line.slice(0, --twCi);
+          if (twCi === 0) {
+            twDel = false;
+            twLi = (twLi + 1) % twLines.length;
+            setTimeout(type, 400);
+            return;
+          }
+          setTimeout(type, 45);
+        }
+      }
+      setTimeout(type, 2200);
+
+      const revealObs = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add("visible");
+              revealObs.unobserve(e.target);
+            }
+          });
+        },
+        { threshold: 0.1 },
+      );
+      document
+        .querySelectorAll(".reveal")
+        .forEach((el) => revealObs.observe(el));
+
+      function getSystemTheme() {
+        return window.matchMedia("(prefers-color-scheme: light)").matches
+          ? "light"
+          : "dark";
+      }
+      function getCurrentTheme() {
+        return document.documentElement.dataset.theme || getSystemTheme();
+      }
+      function toggleTheme() {
+        document.documentElement.dataset.theme =
+          getCurrentTheme() === "dark" ? "light" : "dark";
+      }
+
+      let vimMode = false,
+        gPressed = false,
+        gTimer = null;
+      function setVimMsg(msg) {
+        vimEl.textContent = msg;
+      }
+      function toggleVim() {
+        vimMode = !vimMode;
+        vimEl.style.opacity = vimMode ? "1" : "0";
+        if (vimMode) setVimMsg("-- NORMAL --");
+      }
+
+      const DATA = [
+        {
+          category: "Theme",
+          icon: "◑",
+          title: "Toggle Light / Dark",
+          sub: "switch color theme",
+          action: toggleTheme,
+        },
+        {
+          category: "VIM",
+          icon: "⌨",
+          title: "Toggle VIM Mode",
+          sub: "enable j/k/g/G// navigation",
+          action: toggleVim,
+        },
+        {
+          category: "Navigate",
+          icon: "#",
+          title: "Go to About",
+          sub: "./about.sh",
+          action: () => navTo("#about"),
+        },
+        {
+          category: "Navigate",
+          icon: "#",
+          title: "Go to Projects",
+          sub: "ls -la ./work",
+          action: () => navTo("#projects"),
+        },
+        {
+          category: "Navigate",
+          icon: "#",
+          title: "Go to Contact",
+          sub: "cat contact.json",
+          action: () => navTo("#contact"),
+        },
+        {
+          category: "Profile",
+          icon: "@",
+          title: "Isaac Eliape",
+          sub: "Frontend Engineer · Dublin, Ireland",
+          action: null,
+        },
+        {
+          category: "Profile",
+          icon: "@",
+          title: "10+ years experience",
+          sub: "Commercial UI engineering",
+          action: null,
+        },
+        {
+          category: "Profile",
+          icon: "@",
+          title: "Based in Dublin",
+          sub: "Originally from Brazil 🇧🇷",
+          action: null,
+        },
+        {
+          category: "Profile",
+          icon: "@",
+          title: "Bilingual",
+          sub: "Portuguese (native) · English (fluent)",
+          action: null,
+        },
+        {
+          category: "Profile",
+          icon: "@",
+          title: "Currently @ Unum Ireland",
+          sub: "Frontend Developer",
+          action: null,
+        },
+        {
+          category: "Profile",
+          icon: "@",
+          title: "B.Sc. Systems and Web Technologies",
+          sub: "Centro Universitário Senac",
+          action: null,
+        },
+        {
+          category: "Skills",
+          icon: "$",
+          title: "JavaScript",
+          sub: "Core language",
+          action: null,
+        },
+        {
+          category: "Skills",
+          icon: "$",
+          title: "TypeScript",
+          sub: "Typed JavaScript",
+          action: null,
+        },
+        {
+          category: "Skills",
+          icon: "$",
+          title: "React",
+          sub: "UI framework",
+          action: null,
+        },
+        {
+          category: "Skills",
+          icon: "$",
+          title: "CSS & HTML",
+          sub: "Styling & markup",
+          action: null,
+        },
+        {
+          category: "Skills",
+          icon: "$",
+          title: "Animations",
+          sub: "Motion & interaction",
+          action: null,
+        },
+        {
+          category: "Skills",
+          icon: "$",
+          title: "API Integrations",
+          sub: "REST, CMS, third-party",
+          action: null,
+        },
+        {
+          category: "Skills",
+          icon: "$",
+          title: "Accessibility",
+          sub: "WCAG, semantic HTML",
+          action: null,
+        },
+        {
+          category: "Tools",
+          icon: "⚙",
+          title: "Zed",
+          sub: "Fast, minimal, multiplayer editor",
+          action: null,
+        },
+        {
+          category: "Tools",
+          icon: "⚙",
+          title: "Ghostty",
+          sub: "GPU-accelerated terminal",
+          action: null,
+        },
+        {
+          category: "Tools",
+          icon: "⚙",
+          title: "Opencode",
+          sub: "AI coding agent in the terminal",
+          action: null,
+        },
+        {
+          category: "Tools",
+          icon: "⚙",
+          title: "Tmux",
+          sub: "Persistent sessions, panes & windows",
+          action: null,
+        },
+        {
+          category: "Tools",
+          icon: "⚙",
+          title: "fzf · ripgrep · eza · bat · zoxide · jq",
+          sub: "CLI tools",
+          action: null,
+        },
+        {
+          category: "Awards",
+          icon: "★",
+          title: "Cannes Lions ×2",
+          sub: "International advertising awards",
+          action: null,
+        },
+        {
+          category: "Awards",
+          icon: "★",
+          title: "Awwwards ×3",
+          sub: "Web design recognition",
+          action: null,
+        },
+        {
+          category: "Awards",
+          icon: "★",
+          title: "CSS Awards",
+          sub: "cssawards.com",
+          action: null,
+        },
+        {
+          category: "Awards",
+          icon: "★",
+          title: "CSS Light",
+          sub: "csslightbox.com",
+          action: null,
+        },
+        {
+          category: "Awards",
+          icon: "★",
+          title: "CSS Nectar",
+          sub: "cssnectar.com",
+          action: null,
+        },
+        {
+          category: "Awards",
+          icon: "★",
+          title: "Site Inspire",
+          sub: "siteinspire.com",
+          action: null,
+        },
+        {
+          category: "Projects",
+          icon: "▶",
+          title: "sclp.co",
+          sub: "UI engineering portfolio",
+          action: () => open("http://www.isaaceliape.com", "_blank"),
+        },
+        {
+          category: "Projects",
+          icon: "▶",
+          title: "touch-typing-tool",
+          sub: "Practice typing speed",
+          action: () => open("https://github.com/isaaceliape", "_blank"),
+        },
+        {
+          category: "Projects",
+          icon: "▶",
+          title: "task-time-tracker",
+          sub: "Time → money converter",
+          action: () => open("https://github.com/isaaceliape", "_blank"),
+        },
+        {
+          category: "Projects",
+          icon: "▶",
+          title: "unum-ireland",
+          sub: "Global insurance platform UI",
+          action: () => open("https://www.unum.com", "_blank"),
+        },
+        {
+          category: "Contact",
+          icon: "✉",
+          title: "Email",
+          sub: "isaaceliape@me.com",
+          action: () => open("mailto:isaaceliape@me.com"),
+        },
+        {
+          category: "Contact",
+          icon: "✉",
+          title: "LinkedIn",
+          sub: "linkedin.com/in/isaaceliape",
+          action: () => open("https://linkedin.com/in/isaaceliape", "_blank"),
+        },
+        {
+          category: "Contact",
+          icon: "✉",
+          title: "GitHub",
+          sub: "github.com/isaaceliape",
+          action: () => open("https://github.com/isaaceliape", "_blank"),
+        },
+        {
+          category: "Contact",
+          icon: "✉",
+          title: "X / Twitter",
+          sub: "x.com/isaaceliape",
+          action: () => open("https://x.com/isaaceliape", "_blank"),
+        },
+      ];
+
+      function navTo(id) {
+        document.querySelector(id)?.scrollIntoView({ behavior: "smooth" });
+      }
+
+      let activeIdx = -1,
+        filtered = [];
+
+      function fuzzy(str, pattern) {
+        str = str.toLowerCase();
+        pattern = pattern.toLowerCase();
+        let si = 0,
+          pi = 0,
+          score = 0,
+          indices = [];
+        while (si < str.length && pi < pattern.length) {
+          if (str[si] === pattern[pi]) {
+            indices.push(si);
+            score++;
+            pi++;
+          }
+          si++;
+        }
+        return pi === pattern.length ? { score, indices } : null;
+      }
+      function highlight(text, indices) {
+        if (!indices?.length) return esc(text);
+        const ii = new Set(indices);
+        return [...text]
+          .map((ch, i) => (ii.has(i) ? `<mark>${esc(ch)}</mark>` : esc(ch)))
+          .join("");
+      }
+      function esc(s) {
+        return s
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;");
+      }
+
+      function render(query) {
+        activeIdx = -1;
+        const q = query.trim();
+        if (!q) {
+          filtered = [...DATA];
+          const cats = [...new Set(DATA.map((d) => d.category))];
+          results.innerHTML = cats
+            .map((cat) => {
+              const items = DATA.filter((d) => d.category === cat);
+              return (
+                `<div class="pal-section-label">${cat}</div>` +
+                items
+                  .map((item) =>
+                    itemHTML(item, DATA.indexOf(item), item.title, null),
+                  )
+                  .join("")
+              );
+            })
+            .join("");
+        } else {
+          const scored = DATA.map((item) => {
+            const t = fuzzy(item.title, q),
+              s = fuzzy(item.sub, q);
+            const best = t && s ? (t.score >= s.score ? t : s) : t || s;
+            return best
+              ? {
+                  item,
+                  score: best.score,
+                  indices: t
+                    ? { title: t.indices, sub: [] }
+                    : { title: [], sub: s.indices },
+                }
+              : null;
+          })
+            .filter(Boolean)
+            .sort((a, b) => b.score - a.score);
+          filtered = scored.map((r) => r.item);
+          if (!scored.length) {
+            results.innerHTML = "";
+            return;
+          }
+          results.innerHTML = scored
+            .map((r, i) =>
+              itemHTML(
+                r.item,
+                i,
+                highlight(r.item.title, r.indices.title),
+                highlight(r.item.sub, r.indices.sub),
+              ),
+            )
+            .join("");
+        }
+        attachItemEvents();
+      }
+
+      function itemHTML(item, idx, titleHtml, subHtml) {
+        const sub = subHtml !== null ? subHtml : esc(item.sub);
+        const badge = item.action
+          ? '<span class="pal-item-badge">↵ open</span>'
+          : "";
+        return `<div class="pal-item" data-idx="${idx}">
+    <span class="pal-item-icon">${item.icon}</span>
+    <span class="pal-item-body">
+      <div class="pal-item-title">${titleHtml}</div>
+      <div class="pal-item-sub">${sub}</div>
+    </span>${badge}</div>`;
+      }
+      function attachItemEvents() {
+        document.querySelectorAll(".pal-item").forEach((el) => {
+          el.addEventListener("mouseenter", () => setActive(+el.dataset.idx));
+          el.addEventListener("click", () => activate(+el.dataset.idx));
+        });
+      }
+      function setActive(idx) {
+        activeIdx = idx;
+        document
+          .querySelectorAll(".pal-item")
+          .forEach((el) =>
+            el.classList.toggle("active", +el.dataset.idx === idx),
+          );
+      }
+      function activate(idx) {
+        const item = filtered[idx];
+        if (item?.action) {
+          item.action();
+          closePalette();
+        }
+      }
+      function openPalette() {
+        overlay.classList.add("open");
+        input.value = "";
+        render("");
+        setTimeout(() => input.focus(), 50);
+      }
+      function closePalette() {
+        overlay.classList.remove("open");
+      }
+
+      document.addEventListener("keydown", (e) => {
+        const paletteOpen = overlay.classList.contains("open");
+        const inInput = ["INPUT", "TEXTAREA"].includes(
+          document.activeElement.tagName,
+        );
+
+        if (
+          (e.ctrlKey || e.metaKey) &&
+          e.shiftKey &&
+          e.key.toLowerCase() === "p"
+        ) {
+          e.preventDefault();
+          paletteOpen ? closePalette() : openPalette();
+          return;
+        }
+
+        if (paletteOpen) {
+          const items = document.querySelectorAll(".pal-item");
+          if (e.key === "Escape") {
+            closePalette();
+          } else if (e.key === "ArrowDown") {
+            e.preventDefault();
+            const n = Math.min(activeIdx + 1, filtered.length - 1);
+            setActive(n);
+            items[n]?.scrollIntoView({ block: "nearest" });
+          } else if (e.key === "ArrowUp") {
+            e.preventDefault();
+            const n = Math.max(activeIdx - 1, 0);
+            setActive(n);
+            items[n]?.scrollIntoView({ block: "nearest" });
+          } else if (e.key === "Enter") {
+            if (activeIdx >= 0) activate(activeIdx);
+          }
+          return;
+        }
+
+        if (!vimMode || inInput) return;
+
+        switch (e.key) {
+          case "j":
+            e.preventDefault();
+            window.scrollBy({ top: 80, behavior: "smooth" });
+            break;
+          case "k":
+            e.preventDefault();
+            window.scrollBy({ top: -80, behavior: "smooth" });
+            break;
+          case "G":
+            e.preventDefault();
+            window.scrollTo({
+              top: document.body.scrollHeight,
+              behavior: "smooth",
+            });
+            setVimMsg("-- NORMAL -- [G: bottom]");
+            setTimeout(() => setVimMsg("-- NORMAL --"), 1200);
+            break;
+          case "g":
+            e.preventDefault();
+            if (gPressed) {
+              clearTimeout(gTimer);
+              gPressed = false;
+              window.scrollTo({ top: 0, behavior: "smooth" });
+              setVimMsg("-- NORMAL -- [gg: top]");
+              setTimeout(() => setVimMsg("-- NORMAL --"), 1200);
+            } else {
+              gPressed = true;
+              gTimer = setTimeout(() => {
+                gPressed = false;
+              }, 500);
+            }
+            break;
+          case "/":
+            e.preventDefault();
+            openPalette();
+            break;
+          case "Escape":
+            setVimMsg("-- NORMAL --");
+            break;
+        }
+      });
+
+      input.addEventListener("input", () => render(input.value));
+      overlay.addEventListener("click", (e) => {
+        if (e.target === overlay) closePalette();
+      });
+      document
+        .getElementById("nav-palette-btn")
+        .addEventListener("click", openPalette);
+    </script>
+  </body>
+</html>
