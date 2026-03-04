@@ -17,10 +17,12 @@ Navigation links (about, projects, blog, contact) were not visible/crowded on mo
 
 ## Solution
 Updated `@media (max-width: 640px)` in `css/layout.css`:
-- **Hidden**: `.nav-links a` — all text navigation links
-- **Visible**: `.kbd-hint` — command palette button (⌘ Ctrl+Shift+P)
-- **Visible**: `.theme-toggle` — theme switch button (☀/☾)
+- **Hidden**: `.nav-links a` — all text navigation links (`!important` added)
+- **Visible**: `.nav-links .kbd-hint` — command palette button (⌘ Ctrl+Shift+P)
+- **Visible**: `.nav-links .theme-toggle` — theme switch button (☀/☾)
 - **Visible**: `.nav-logo` — site logo remains visible
+
+**Note:** Added `!important` flags and more specific selectors (`.nav-links .kbd-hint` instead of just `.kbd-hint`) to override conflicting styles.
 
 ## Changes Made
 
@@ -28,19 +30,19 @@ Updated `@media (max-width: 640px)` in `css/layout.css`:
 ```css
 /* Hide navigation links on mobile - use command palette instead */
 .nav-links a {
-  display: none;
+  display: none !important;
 }
 
 /* Show only command palette button on mobile */
-.kbd-hint {
-  display: flex;
+.nav-links .kbd-hint {
+  display: flex !important;
   font-size: 0.6rem;
   padding: 0.15rem 0.4rem;
 }
 
 /* Keep theme toggle accessible on mobile */
-.theme-toggle {
-  display: flex;
+.nav-links .theme-toggle {
+  display: flex !important;
   padding: 0.3rem 0.5rem;
   font-size: 0.9rem;
 }
@@ -56,6 +58,6 @@ Updated `@media (max-width: 640px)` in `css/layout.css`:
 - `css/layout.css` — Updated mobile navigation media query
 
 ## Commit
-9d474ff
+9d474ff (initial) → 59b79a2 (fix specificity)
 
 </summary>
