@@ -95,6 +95,13 @@
    ========================================================================== */
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+/* Ensure images are responsive */
+img {
+  max-width: 100%;
+  height: auto;
 }
 
 body {
@@ -108,11 +115,25 @@ body {
   transition:
     background 0.3s,
     color 0.3s;
+  word-wrap: break-word;
+}
+
+/* Prevent text overflow on all elements */
+* {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 a {
   color: inherit;
   text-decoration: none;
+}
+
+/* Prevent code blocks from causing horizontal overflow */
+pre,
+code {
+  overflow-x: auto;
+  max-width: 100%;
 }
 
 /* ==========================================================================
