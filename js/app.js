@@ -349,12 +349,17 @@ function setupEventListeners() {
  */
 export function printConsoleArt() {
   // Get current accent color from CSS variables (changes with theme)
-  const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#00d4aa';
-  
+  const accentColor =
+    getComputedStyle(document.documentElement)
+      .getPropertyValue("--accent")
+      .trim() || "#00d4aa";
+
   // Detect current theme - use white for info text on light theme
-  const currentTheme = document.documentElement.dataset.theme || 
-    (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-  const infoTextColor = currentTheme === 'light' ? '#ffffff' : '#c8c8c8';
+  const currentTheme =
+    document.documentElement.dataset.theme ||
+    (window.matchMedia("(prefers-color-scheme: light)").matches
+      ? "light"
+      : "dark");
 
   console.log(
     `%c
@@ -375,7 +380,7 @@ export function printConsoleArt() {
       `💻 GitHub: github.com/isaaceliape\n` +
       `🐦 X/Twitter: x.com/isaaceliape\n\n` +
       `Open to new opportunities, collaborations & frontend chat!`,
-    `color: ${infoTextColor}; font-family: "JetBrains Mono", monospace; font-size: 13px;`,
+    `color: gray; font-family: "JetBrains Mono", monospace; font-size: 13px;`,
   );
 }
 
