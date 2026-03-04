@@ -344,14 +344,10 @@ function setupEventListeners() {
 }
 
 /**
- * Initialize the application
+ * Print ASCII art and contact info to console with current theme colors
+ * Called on init and whenever theme changes
  */
-function init() {
-  initTheme();
-  initAnimations();
-  setupEventListeners();
-
-  // ASCII Art and Contact Info in Console
+export function printConsoleArt() {
   // Get current accent color from CSS variables (changes with theme)
   const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#00d4aa';
   const textColor = getComputedStyle(document.documentElement).getPropertyValue('--text').trim() || '#c8c8c8';
@@ -377,8 +373,27 @@ function init() {
       `Open to new opportunities, collaborations & frontend chat!`,
     `color: ${textColor}; font-family: "JetBrains Mono", monospace; font-size: 13px;`,
   );
+}
 
+/**
+ * Initialize the application
+ */
+function init() {
+  initTheme(refreshConsoleOnThemeChange);
+  initAnimations();
+  setupEventListeners();
+
+  printConsoleArt();
   console.log("Portfolio app initialized");
+}
+
+/**
+ * Callback function to refresh console when theme changes
+ */
+function refreshConsoleOnThemeChange() {
+  console.clear();
+  printConsoleArt();
+  console.log("Theme changed — colors updated");
 }
 
 // Initialize on DOM ready

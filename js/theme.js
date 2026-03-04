@@ -4,6 +4,9 @@ const STORAGE_KEY = 'portfolio-theme';
 const THEME_LIGHT = 'light';
 const THEME_DARK = 'dark';
 
+// Callback function to run when theme changes
+let onThemeChangeCallback = null;
+
 /**
  * Detect system theme preference
  * @returns {string} "light" or "dark"
@@ -59,10 +62,17 @@ function updateToggleIcon(theme) {
 /**
  * Apply theme to document
  * @param {string} theme - "light" or "dark"
+ * @param {boolean} triggerCallback - whether to trigger the onThemeChangeCallback (default: true)
  */
-export function applyTheme(theme) {
+export function applyTheme(theme, triggerCallback = true) {
   document.documentElement.dataset.theme = theme;
   updateToggleIcon(theme);
+  
+  // Trigger callback if provided and theme actually changed
+  if (triggerCallback && onThemeChangeCallback) {
+    // Small delay to allow CSS variables to update
+    setTimeout(onThemeChangeCallback, 50);
+  }
 }
 
 /**
@@ -84,7 +94,7 @@ export function saveTheme(theme) {
 export function toggleTheme() {
   const current = getCurrentTheme();
   const next = current === THEME_DARK ? THEME_LIGHT : THEME_DARK;
-  applyTheme(next);
+  applyTheme(next, true); // true to trigger callback
   saveTheme(next);
 }
 
@@ -123,8 +133,12 @@ function watchSystemPreference() {
 
 /**
  * Initialize the theme system
+ * @param {Function} onChangeCallback - Optional callback function to run when theme changes
  */
-export function initTheme() {
+export function initTheme(onChangeCallback = null) {
+  // Store the callback for later use
+  onThemeChangeCallback = onChangeCallback;
+  
   setupToggleButton();
   watchSystemPreference();
   
