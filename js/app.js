@@ -338,5 +338,4 @@ if (document.readyState === "loading") {
   init();
 }
 
-// Export key functions for potential external use
-export { navTo, openPalette, closePalette, toggleVim, toggleTheme };
+// All key functions already exported at function definitions
