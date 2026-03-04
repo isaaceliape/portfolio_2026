@@ -46,6 +46,13 @@ export const DATA = [
     action: "nav:#contact",
   },
   {
+    category: "Navigate",
+    icon: "#",
+    title: "Go to Blog",
+    sub: "open blog/index.html",
+    action: "open:blog/index.html",
+  },
+  {
     category: "Profile",
     icon: "@",
     title: "Isaac Eliape",
