@@ -150,4 +150,116 @@ Which phases cover which requirements. Updated during roadmap creation.
 ---
 
 *Requirements defined: 2026-03-03*
-*Last updated: 2026-03-03 after roadmap creation*
+*Last updated: 2026-03-04 after milestone v1.1 start*
+
+---
+
+# Requirements: Blog Addition (v1.1)
+
+**Defined:** 2026-03-04
+**Core Value:** Convey that you're a creative developer who loves technology and is excited about AI.
+
+## v1.1 Requirements
+
+### Blog Structure
+
+- [ ] **BLOG-01**: Blog has index page at `blog/index.html` listing all posts
+- [ ] **BLOG-02**: Blog has 3 individual post pages (`blog/post-1.html`, `blog/post-2.html`, `blog/post-3.html`)
+- [ ] **BLOG-03**: Each post has title, date, and content rendered in semantic HTML
+- [ ] **BLOG-04**: Index page shows post titles, dates, and excerpts with links to full posts
+- [ ] **BLOG-05**: Posts link back to index and main portfolio
+
+### Design & UX
+
+- [ ] **BLOG-06**: Blog pages match portfolio design system (CSS variables, typography, colors)
+- [ ] **BLOG-07**: Blog uses same theme system (dark/light mode) as portfolio
+- [ ] **BLOG-08**: Blog maintains terminal/CLI aesthetic consistent with portfolio
+- [ ] **BLOG-09**: Blog has clear visual hierarchy (headers, paragraphs, code blocks)
+- [ ] **BLOG-10**: Blog pages have consistent header/footer with portfolio
+
+### Navigation & Integration
+
+- [ ] **BLOG-11**: "Blog" link appears in main portfolio navigation
+- [ ] **BLOG-12**: Blog entries appear in command palette search
+- [ ] **BLOG-13**: User can navigate from portfolio to blog and back seamlessly
+- [ ] **BLOG-14**: Blog posts have unique URLs shareable directly
+
+### Accessibility
+
+- [ ] **BLOG-15**: Blog meets WCAG 2.1 AA (keyboard navigation, focus indicators, ARIA labels)
+- [ ] **BLOG-16**: Blog content is readable with screen readers
+- [ ] **BLOG-17**: Color contrast meets AA standards for blog text
+
+### Responsive
+
+- [ ] **BLOG-18**: Blog is readable on mobile (375px+)
+- [ ] **BLOG-19**: Blog layout adapts to tablet (768px+) and desktop (1024px+)
+- [ ] **BLOG-20**: Touch targets on blog are minimum 44px
+
+## v2 Requirements (Blog)
+
+Deferred to future release. Tracked but not in current milestone.
+
+### Content Management
+
+- **BLOG-V2-01**: RSS feed generation
+- **BLOG-V2-02**: Tag/category system
+- **BLOG-V2-03**: Search within blog posts
+- **BLOG-V2-04**: Pagination for many posts
+
+### Engagement
+
+- **BLOG-V2-05**: Comments system (likely third-party embed)
+- **BLOG-V2-06**: Social sharing buttons
+- **BLOG-V2-07**: Newsletter signup
+
+### Authoring
+
+- **BLOG-V2-08**: Markdown-to-HTML build pipeline
+- **BLOG-V2-09**: Draft/publish workflow
+- **BLOG-V2-10**: Post scheduling
+
+## Out of Scope (v1.1)
+
+| Feature | Reason |
+|---------|--------|
+| RSS feed | Can be added later; not critical for 3 posts |
+| Comments | Requires backend or third-party service; keep it simple |
+| Search within blog | Command palette covers site-wide search |
+| Tags/categories | Overkill for 3 posts; reconsider at 10+ posts |
+| Markdown processing | HTML files adequate; add build pipeline later if needed |
+| Backend/CMS | Static site constraint; no server-side processing |
+
+## Traceability (v1.1)
+
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| BLOG-01 | Phase 5 | Pending |
+| BLOG-02 | Phase 5 | Pending |
+| BLOG-03 | Phase 5 | Pending |
+| BLOG-04 | Phase 5 | Pending |
+| BLOG-05 | Phase 5 | Pending |
+| BLOG-06 | Phase 6 | Pending |
+| BLOG-07 | Phase 6 | Pending |
+| BLOG-08 | Phase 6 | Pending |
+| BLOG-09 | Phase 6 | Pending |
+| BLOG-10 | Phase 6 | Pending |
+| BLOG-11 | Phase 6 | Pending |
+| BLOG-12 | Phase 6 | Pending |
+| BLOG-13 | Phase 6 | Pending |
+| BLOG-14 | Phase 6 | Pending |
+| BLOG-15 | Phase 6 | Pending |
+| BLOG-16 | Phase 6 | Pending |
+| BLOG-17 | Phase 6 | Pending |
+| BLOG-18 | Phase 6 | Pending |
+| BLOG-19 | Phase 6 | Pending |
+| BLOG-20 | Phase 6 | Pending |
+
+**Coverage:**
+- v1.1 requirements: 20 total
+- Mapped to phases: 20
+- Unmapped: 0 ✓
+
+---
+*Requirements defined: 2026-03-04*
+*Last updated: 2026-03-04 after milestone v1.1 start*

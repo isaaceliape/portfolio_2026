@@ -2,18 +2,23 @@
 
 **Project:** Frontend Developer Portfolio Refresh
 **Core Value:** Convey that you're a creative developer who loves technology and is excited about AI.
-**Target Launch:** v1.0
-**Granularity:** Coarse (4 phases)
-**Last Updated:** 2026-03-03
+**Target Launch:** v1.1 (Blog Addition)
+**Granularity:** Coarse (6 phases)
+**Last Updated:** 2026-03-04
 
 ---
 
 ## Phases
 
-- [ ] **Phase 1: Foundation & Code Organization** - Separate code into CSS and JavaScript files, establish responsive architecture, implement theme system
+### v1.0 Portfolio Refresh
+- [x] **Phase 1: Foundation & Code Organization** - Separate code into CSS and JavaScript files, establish responsive architecture, implement theme system
 - [ ] **Phase 2: Navigation & Content Architecture** - Clear information hierarchy, navigation system, About section, contact information
 - [ ] **Phase 3: Project Showcase & Substance** - Project cards with descriptions, live demos, GitHub links, case studies, skills list
 - [ ] **Phase 4: Visual Polish & Animations** - Scroll animations, micro-interactions, custom effects, performance optimization, accessibility refinement
+
+### v1.1 Blog Addition
+- [ ] **Phase 5: Blog Structure** - Create blog pages, directory structure, basic HTML files
+- [ ] **Phase 6: Blog Integration & Polish** - Design consistency, navigation integration, accessibility, responsive layout
 
 ---
 
@@ -105,21 +110,70 @@
 
 ---
 
+### Phase 5: Blog Structure
+
+**Goal:** Create blog infrastructure with index page and 3 post pages using established file patterns.
+
+**Depends on:** Phase 1 (CSS/JS organization, responsive foundation, theme system)
+
+**Requirements Mapped:** BLOG-01, BLOG-02, BLOG-03, BLOG-04, BLOG-05
+
+**Success Criteria** (observable behaviors):
+1. User visits `blog/index.html` and sees list of 3 blog posts with titles, dates, and excerpts
+2. User clicks on any post excerpt and navigates to individual post page with full content
+3. User can navigate directly to `blog/post-1.html`, `blog/post-2.html`, `blog/post-3.html` via URL
+4. Blog pages load without console errors and render semantic HTML structure
+5. Post pages link back to blog index and main portfolio
+
+**Plans:** TBD
+
+---
+
+### Phase 6: Blog Integration & Polish
+
+**Goal:** Integrate blog into portfolio navigation and ensure design consistency, accessibility, and responsive behavior.
+
+**Depends on:** Phase 5 (blog pages exist), Phase 1 (theme system, responsive foundation)
+
+**Requirements Mapped:** BLOG-06, BLOG-07, BLOG-08, BLOG-09, BLOG-10, BLOG-11, BLOG-12, BLOG-13, BLOG-14, BLOG-15, BLOG-16, BLOG-17, BLOG-18, BLOG-19, BLOG-20
+
+**Success Criteria** (observable behaviors):
+1. User sees "Blog" link in main portfolio navigation (header), clicking navigates to blog index
+2. User opens command palette (Ctrl+Shift+P) and sees blog posts searchable by title/content
+3. Blog pages use same CSS variables, fonts, and colors as portfolio (consistent visual identity)
+4. Blog respects user's theme preference (dark/light) automatically
+5. Blog is fully keyboard navigable (Tab through links, Enter to activate)
+6. Blog layout adapts to mobile (375px), tablet (768px), and desktop without horizontal scrolling
+7. Blog text meets WCAG AA contrast standards (4.5:1 for body text)
+8. Blog content is readable with screen readers (semantic headings, landmarks, link text)
+
+**Plans:** TBD
+
+---
+
 ## Progress Tracking
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Code Organization | 0/TBD | Not started | — |
+| 1. Foundation & Code Organization | 5/6 | In Progress | 2026-03-03 → |
 | 2. Navigation & Content Architecture | 0/TBD | Not started | — |
 | 3. Project Showcase & Substance | 0/TBD | Not started | — |
 | 4. Visual Polish & Animations | 0/TBD | Not started | — |
+| 5. Blog Structure | 0/TBD | Not started | — |
+| 6. Blog Integration & Polish | 0/TBD | Not started | — |
 
 ---
 
 ## Requirement Coverage
 
-**Total v1 requirements:** 31
+### v1.0 Portfolio Refresh
+**Total v1.0 requirements:** 31
 **Mapped to phases:** 31
+**Coverage:** 100%
+
+### v1.1 Blog Addition
+**Total v1.1 requirements:** 20
+**Mapped to phases:** 20
 **Coverage:** 100%
 
 **Unmapped requirements:** None
@@ -161,6 +215,31 @@
 | TECH-03 | Phase 1 | Technical Foundation |
 | TECH-04 | Phase 1 | Technical Foundation |
 
+### v1.1 Coverage Detail
+
+| Requirement | Phase | Category |
+|-------------|-------|----------|
+| BLOG-01 | Phase 5 | Blog Structure |
+| BLOG-02 | Phase 5 | Blog Structure |
+| BLOG-03 | Phase 5 | Blog Structure |
+| BLOG-04 | Phase 5 | Blog Structure |
+| BLOG-05 | Phase 5 | Blog Structure |
+| BLOG-06 | Phase 6 | Design & UX |
+| BLOG-07 | Phase 6 | Design & UX |
+| BLOG-08 | Phase 6 | Design & UX |
+| BLOG-09 | Phase 6 | Design & UX |
+| BLOG-10 | Phase 6 | Design & UX |
+| BLOG-11 | Phase 6 | Navigation & Integration |
+| BLOG-12 | Phase 6 | Navigation & Integration |
+| BLOG-13 | Phase 6 | Navigation & Integration |
+| BLOG-14 | Phase 6 | Navigation & Integration |
+| BLOG-15 | Phase 6 | Accessibility |
+| BLOG-16 | Phase 6 | Accessibility |
+| BLOG-17 | Phase 6 | Accessibility |
+| BLOG-18 | Phase 6 | Responsive |
+| BLOG-19 | Phase 6 | Responsive |
+| BLOG-20 | Phase 6 | Responsive |
+
 ---
 
 ## Rationale
@@ -185,6 +264,12 @@ Phase 2 (Navigation/IA) ← relies on responsive, theme, accessibility
 Phase 3 (Substance) ← relies on clear structure, navigation
     ↓
 Phase 4 (Polish) ← relies on stable content, working site
+
+Phase 1 (Foundation) ───────────────────────────────┐
+    ↓                                               ↓
+Phase 5 (Blog Structure) ← relies on CSS/JS structure, theme system
+    ↓
+Phase 6 (Blog Integration) ← relies on blog pages, navigation patterns
 ```
 
 ### Granularity Alignment
@@ -216,5 +301,21 @@ Research suggests Next.js migration, but current constraints favor evolved vanil
 
 ---
 
+### Blog Phase Rationale
+
+**Phase 5 (Structure) before Phase 6 (Integration):**
+- Create the blog infrastructure first (pages, directory structure)
+- Validate that individual post pages render correctly
+- Ensure URLs work before adding navigation complexity
+- Follow same pattern as Phase 1 (foundation) → Phase 2 (integration)
+
+**Blog depends on Phase 1 Foundation:**
+- Blog reuses CSS variables, theme system, and responsive patterns from Phase 1
+- No need to rebuild these; extend existing foundation
+- Blog adds new pages that import existing CSS/JS modules
+
+---
+
 *Roadmap created: 2026-03-03*
-*Ready for phase planning via `/gsd:plan-phase 1`*
+*Updated: 2026-03-04 — Added v1.1 Blog phases*
+*Ready for phase planning via `/gsd-discuss-phase 5` or `/gsd-plan-phase 5`*
