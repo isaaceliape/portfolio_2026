@@ -27,7 +27,14 @@ let gTimer = null;
  * @param {string} id - CSS selector for the target element
  */
 export function navTo(id) {
-  document.querySelector(id)?.scrollIntoView({ behavior: "smooth" });
+  const target = document.querySelector(id);
+  
+  if (target) {
+    target.scrollIntoView({ behavior: "smooth" });
+  } else if (id.startsWith('#') && window.location.pathname.includes('/blog/')) {
+    const basePath = window.location.pathname.split('/blog/')[0];
+    window.location.href = `${basePath}/index.html${id}`;
+  }
 }
 
 /**
@@ -44,7 +51,9 @@ function setVimMsg(msg) {
  */
 export function toggleVim() {
   vimMode = !vimMode;
-  if (vimEl) vimEl.style.opacity = vimMode ? "1" : "0";
+  if (vimEl) {
+    vimEl.classList.toggle("vim-visible", vimMode);
+  }
   if (vimMode) setVimMsg("-- NORMAL --");
 }
 

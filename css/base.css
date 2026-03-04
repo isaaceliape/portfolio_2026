@@ -167,9 +167,15 @@ body::before {
     transparent 70%
   );
   transform: translate(-50%, -50%);
+  left: var(--cursor-x, -9999px);
+  top: var(--cursor-y, -9999px);
   transition:
     left 0.06s,
     top 0.06s;
+}
+
+#cursor-glow.cursor-glow-disabled {
+  display: none;
 }
 
 /* ==========================================================================

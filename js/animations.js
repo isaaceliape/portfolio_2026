@@ -18,13 +18,13 @@ export function initCursorGlow() {
 
   // Disable cursor glow for users who prefer reduced motion
   if (prefersReducedMotion()) {
-    glowEl.style.display = 'none';
+    glowEl.classList.add('cursor-glow-disabled');
     return;
   }
 
   document.addEventListener("mousemove", (e) => {
-    glowEl.style.left = e.clientX + "px";
-    glowEl.style.top = e.clientY + "px";
+    glowEl.style.setProperty('--cursor-x', e.clientX + "px");
+    glowEl.style.setProperty('--cursor-y', e.clientY + "px");
   });
 }
 
