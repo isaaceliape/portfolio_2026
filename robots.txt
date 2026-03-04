@@ -1,0 +1,27 @@
+# robots.txt for Portfolio 2026
+# Controls search engine crawling behavior
+
+# Default rules for all crawlers
+User-agent: *
+
+# Allow crawling of all public pages
+Allow: /
+Allow: /blog/
+Allow: /css/
+Allow: /js/
+
+# Block direct image crawling (OG images are large)
+Disallow: /*.png$
+
+# Block version control directory
+Disallow: /.git/
+
+# Block planning documents
+Disallow: /.planning/
+
+# Block Claude configuration
+Disallow: /.claude/
+
+# Sitemap location
+# TODO: Replace YOUR_GITHUB_USERNAME with actual GitHub username
+Sitemap: https://YOUR_GITHUB_USERNAME.github.io/portfolio_2026/sitemap.xml
