@@ -131,6 +131,3 @@ export function initTheme() {
   // Ensure icon matches current theme
   updateToggleIcon(getCurrentTheme());
 }
-
-// Export all public functions
-export { getSystemTheme, getCurrentTheme, applyTheme, saveTheme, toggleTheme, initTheme };
