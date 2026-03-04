@@ -1,0 +1,145 @@
+/** CSS Layout: Section Layouts, Grid Systems, Flex Utilities, Responsive Breakpoints */
+
+/* ==========================================================================
+   Section Layout
+   ========================================================================== */
+section {
+  padding: 6rem 2rem;
+  max-width: 860px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* ==========================================================================
+   Grid Layouts
+   ========================================================================== */
+.projects-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+/* ==========================================================================
+   Flex Layouts
+   ========================================================================== */
+.contact-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.hero-btns {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+  padding-left: 1.2rem;
+  opacity: 0;
+  animation: fadeUp 0.6s 1.8s ease forwards;
+}
+
+/* ==========================================================================
+   Container Patterns
+   ========================================================================== */
+.term-body {
+  padding: 1.5rem;
+}
+
+.output {
+  padding-left: 1.2rem;
+  margin-bottom: 1.4rem;
+}
+
+/* ==========================================================================
+   Responsive Breakpoints (Desktop-first)
+   ========================================================================== */
+
+/* Tablet: max-width 1024px */
+@media (max-width: 1024px) {
+  section {
+    max-width: 760px;
+  }
+}
+
+/* Mobile: max-width 640px */
+@media (max-width: 640px) {
+  nav {
+    padding: 0.7rem 1rem;
+  }
+
+  section {
+    padding: 4rem 1rem;
+  }
+
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ascii {
+    display: none;
+  }
+}
+
+/* Extra small devices: max-width 375px */
+@media (max-width: 375px) {
+  section {
+    padding: 3rem 0.75rem;
+  }
+
+  .nav-links {
+    gap: 1rem;
+  }
+
+  .hero-btns {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .term-body {
+    padding: 1rem;
+  }
+
+  /* Ensure touch targets are at least 44px */
+  .nav-links a,
+  .cli-btn,
+  .proj-link,
+  .contact-row {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+
+  /* Prevent horizontal overflow */
+  body {
+    overflow-x: hidden;
+  }
+
+  /* Ensure text remains readable */
+  body {
+    font-size: 13px;
+  }
+
+  .proj {
+    padding: 1rem;
+  }
+
+  .proj-name {
+    font-size: 0.8rem;
+  }
+
+  .proj-desc {
+    font-size: 0.75rem;
+  }
+
+  .output {
+    padding-left: 0.75rem;
+  }
+
+  .contact-row .val {
+    font-size: 0.75rem;
+  }
+}
