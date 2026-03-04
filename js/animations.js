@@ -1,11 +1,26 @@
 /** Animation module - cursor glow, typewriter, and reveal animations */
 
 /**
+ * Check if user prefers reduced motion
+ * @returns {boolean} true if user prefers reduced motion
+ */
+export function prefersReducedMotion() {
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+/**
  * Initialize cursor glow effect that follows mouse movement
+ * Respects prefers-reduced-motion preference
  */
 export function initCursorGlow() {
   const glowEl = document.getElementById("cursor-glow");
   if (!glowEl) return;
+
+  // Disable cursor glow for users who prefer reduced motion
+  if (prefersReducedMotion()) {
+    glowEl.style.display = 'none';
+    return;
+  }
 
   document.addEventListener("mousemove", (e) => {
     glowEl.style.left = e.clientX + "px";
@@ -16,10 +31,17 @@ export function initCursorGlow() {
 /**
  * Initialize typewriter animation for hero section
  * Cycles through commands: ls projects/, open sclp.co, ssh ieliape@work
+ * Respects prefers-reduced-motion preference
  */
 export function initTypewriter() {
   const twEl = document.getElementById("tw");
   if (!twEl) return;
+
+  // Show first line immediately without animation for reduced motion
+  if (prefersReducedMotion()) {
+    twEl.textContent = 'ls projects/';
+    return;
+  }
 
   const twLines = ["ls projects/", "open sclp.co", "ssh ieliape@work"];
   let twLi = 0,
@@ -55,10 +77,19 @@ export function initTypewriter() {
 /**
  * Initialize reveal animations using IntersectionObserver
  * Elements with .reveal class fade in and slide up when scrolled into view
+ * Respects prefers-reduced-motion preference
  */
 export function initRevealAnimations() {
   const revealElements = document.querySelectorAll(".reveal");
   if (!revealElements.length) return;
+
+  // Make all reveal elements visible immediately for reduced motion
+  if (prefersReducedMotion()) {
+    revealElements.forEach(el => {
+      el.classList.add('visible');
+    });
+    return;
+  }
 
   const revealObs = new IntersectionObserver(
     (entries) => {
