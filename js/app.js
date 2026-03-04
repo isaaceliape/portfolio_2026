@@ -11,6 +11,7 @@ const overlay = document.getElementById("palette-overlay");
 const input = document.getElementById("palette-input");
 const results = document.getElementById("palette-results");
 const vimEl = document.getElementById("vim-indicator");
+const announceEl = document.getElementById("palette-announce");
 
 // Palette State
 let activeIdx = -1;
@@ -109,6 +110,16 @@ function activate(idx) {
 }
 
 /**
+ * Announce message to screen readers
+ * @param {string} message - Message to announce
+ */
+function announce(message) {
+  if (announceEl) {
+    announceEl.textContent = message;
+  }
+}
+
+/**
  * Render the palette with optional search query
  * @param {string} query - Search query string (empty shows all)
  */
@@ -172,6 +183,41 @@ function render(query) {
   }
 
   attachItemEvents();
+
+  // Announce results to screen readers
+  if (filtered.length > 0) {
+    announce(`${filtered.length} result${filtered.length === 1 ? '' : 's'} found`);
+  } else if (q) {
+    announce('No results found');
+  }
+}
+
+/**
+ * Trap focus within an element (for modal dialogs)
+ * @param {HTMLElement} element - The element to trap focus within
+ */
+function trapFocus(element) {
+  const focusableElements = element.querySelectorAll(
+    'a[href], button, textarea, input[type="text"], input[type="radio"], input[type="checkbox"], select, [tabindex]:not([tabindex="-1"])'
+  );
+  const firstFocusable = focusableElements[0];
+  const lastFocusable = focusableElements[focusableElements.length - 1];
+
+  element.addEventListener('keydown', function(e) {
+    if (e.key !== 'Tab') return;
+
+    if (e.shiftKey) {
+      if (document.activeElement === firstFocusable) {
+        lastFocusable.focus();
+        e.preventDefault();
+      }
+    } else {
+      if (document.activeElement === lastFocusable) {
+        firstFocusable.focus();
+        e.preventDefault();
+      }
+    }
+  });
 }
 
 /**
@@ -183,6 +229,7 @@ export function openPalette() {
   input.value = "";
   render("");
   setTimeout(() => input.focus(), 50);
+  trapFocus(overlay);
 }
 
 /**
@@ -291,9 +338,17 @@ function setupEventListeners() {
     if (e.target === overlay) closePalette();
   });
 
-  // Palette button in navbar
+  // Palette button in navbar (with keyboard support)
   const navPaletteBtn = document.getElementById("nav-palette-btn");
-  navPaletteBtn?.addEventListener("click", openPalette);
+  if (navPaletteBtn) {
+    navPaletteBtn.addEventListener("click", openPalette);
+    navPaletteBtn.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        openPalette();
+      }
+    });
+  }
 }
 
 /**
