@@ -36,123 +36,15 @@
         document.documentElement.dataset.theme = theme;
       })();
     </script>
-    <!-- Critical CSS - inlined for fast first paint -->
-    <style>
-      /* CSS Variables (needed for theming immediately) */
-      :root {
-        --bg: #0c0c0c;
-        --surface: #111;
-        --surface2: #161616;
-        --border: #1e1e1e;
-        --border-bright: #2e2e2e;
-        --text: #c8c8c8;
-        --muted: #555;
-        --accent: #00d4aa;
-        --accent2: #7c6af7;
-        --warn: #e5a84b;
-        --err: #e06c75;
-        --term-bar: #161616;
-        --scanline: rgba(0, 0, 0, 0.04);
-        --glow-color: rgba(0, 212, 170, 0.05);
-      }
-      
-      /* Light theme variables */
-      @media (prefers-color-scheme: light) {
-        :root:not([data-theme]) {
-          --bg: #f9f9fb;
-          --surface: #ffffff;
-          --surface2: #f0f1f5;
-          --border: #dde0ea;
-          --border-bright: #c8ccd8;
-          --text: #2c2f3d;
-          --muted: #8b90a8;
-          --accent: #008ec4;
-          --accent2: #7c5af5;
-          --warn: #da6800;
-          --err: #d43552;
-          --term-bar: #e8eaf0;
-          --scanline: rgba(0, 0, 0, 0.015);
-          --glow-color: rgba(0, 142, 196, 0.06);
-        }
-      }
-      
-      /* Base reset */
-      *, *::before, *::after {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
-      
-      html {
-        scroll-behavior: smooth;
-      }
-      
-      body {
-        background: var(--bg);
-        color: var(--text);
-        font-family: "JetBrains Mono", "Fira Code", monospace;
-        font-size: 14px;
-        line-height: 1.7;
-        -webkit-font-smoothing: antialiased;
-        overflow-x: hidden;
-      }
-      
-      a {
-        color: inherit;
-        text-decoration: none;
-      }
-      
-      /* Critical navigation styles */
-      nav {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 100;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0.8rem 2rem;
-        background: color-mix(in srgb, var(--bg) 88%, transparent);
-        backdrop-filter: blur(12px);
-        border-bottom: 1px solid var(--border);
-      }
-      
-      /* Critical hero styles */
-      #hero {
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        padding: 5rem 2rem 2rem;
-        max-width: 860px;
-        margin: 0 auto;
-      }
-      
-      section {
-        padding: 6rem 2rem;
-        max-width: 860px;
-        margin: 0 auto;
-      }
-      
-      /* CLS Optimizations - reserve space for dynamic content */
-      #tw {
-        min-height: 1.2em;
-        display: inline-block;
-      }
-      
-      /* Prevent layout shifts from images */
-      img {
-        max-width: 100%;
-        height: auto;
-      }
-    </style>
+    <!-- Critical CSS loaded first -->
+    <link rel="stylesheet" href="css/critical.css" />
     <!-- Non-critical CSS loaded asynchronously -->
     <link rel="stylesheet" href="css/base.css" media="print" onload="this.media='all'" />
     <link rel="stylesheet" href="css/layout.css" media="print" onload="this.media='all'" />
     <link rel="stylesheet" href="css/components.css" media="print" onload="this.media='all'" />
     
     <noscript>
+      <link rel="stylesheet" href="css/critical.css" />
       <link rel="stylesheet" href="css/base.css" />
       <link rel="stylesheet" href="css/layout.css" />
       <link rel="stylesheet" href="css/components.css" />
@@ -171,7 +63,7 @@
       - TTI: ~1.5s (target: < 3.8s) ✓
       
       Performance Optimizations Applied:
-      - Critical CSS inlined for fast first paint
+      - Critical CSS loaded first for fast first paint
       - Non-critical CSS loaded asynchronously
       - Google Fonts with display=swap and preconnect
       - CLS-optimized layout with reserved spaces
