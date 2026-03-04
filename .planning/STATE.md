@@ -34,7 +34,7 @@
 
 **Current Phase:** 05-blog-structure
 **Current Plan:** 05-blog-structure-01 — Complete
-**Last Activity:** 2026-03-04 — Completed quick task 4: improve blog index page spacing and text emphasis with CLI styling
+**Last Activity:** 2026-03-04 — Completed quick task 5: fix mobile header navigation - hide links show only command palette
 
 **Progress:**
 ```
@@ -109,6 +109,7 @@ None — milestone initialized.
 | 2 | add the blog link to the header nav | 2026-03-04 | 064add6 | [2-add-the-blog-link-to-the-header-nav](./quick/2-add-the-blog-link-to-the-header-nav/) |
 | 3 | fix blog post 1 layout (too large) and use theme colors | 2026-03-04 | 9c7e672 | [3-fix-blog-post-1-layout-too-large-and-use](./quick/3-fix-blog-post-1-layout-too-large-and-use/) |
 | 4 | improve blog index page spacing and text emphasis with CLI styling | 2026-03-04 | d0bb9fe | [4-improve-blog-index-page-spacing-and-text](./quick/4-improve-blog-index-page-spacing-and-text/) |
+| 5 | fix mobile header navigation - hide links show only command palette | 2026-03-04 | 9d474ff | [5-fix-mobile-header-navigation-hide-links-](./quick/5-fix-mobile-header-navigation-hide-links-/) |
 
 ### Todos (Milestone v1.1)
 
