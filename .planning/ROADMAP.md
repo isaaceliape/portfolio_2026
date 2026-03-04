@@ -125,7 +125,10 @@
 4. Blog pages load without console errors and render semantic HTML structure
 5. Post pages link back to blog index and main portfolio
 
-**Plans:** TBD
+**Plans:** 1 plan in 1 wave
+
+**Plan list:**
+- [ ] 05-blog-structure-01-PLAN.md — Create Blog Infrastructure (Wave 1)
 
 ---
 
@@ -159,7 +162,7 @@
 | 2. Navigation & Content Architecture | 0/TBD | Not started | — |
 | 3. Project Showcase & Substance | 0/TBD | Not started | — |
 | 4. Visual Polish & Animations | 0/TBD | Not started | — |
-| 5. Blog Structure | 0/TBD | Not started | — |
+| 5. Blog Structure | 0/1 | Planned | — |
 | 6. Blog Integration & Polish | 0/TBD | Not started | — |
 
 ---
