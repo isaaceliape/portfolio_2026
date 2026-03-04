@@ -105,19 +105,19 @@ section {
 
   /* Hide navigation links on mobile - use command palette instead */
   .nav-links a {
-    display: none;
+    display: none !important;
   }
 
   /* Show only command palette button on mobile */
-  .kbd-hint {
-    display: flex;
+  .nav-links .kbd-hint {
+    display: flex !important;
     font-size: 0.6rem;
     padding: 0.15rem 0.4rem;
   }
 
   /* Keep theme toggle accessible on mobile */
-  .theme-toggle {
-    display: flex;
+  .nav-links .theme-toggle {
+    display: flex !important;
     padding: 0.3rem 0.5rem;
     font-size: 0.9rem;
   }
