@@ -64,6 +64,10 @@ nav {
   font-size: 0.75rem;
   color: var(--muted);
   transition: color 0.2s;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
 }
 
 .nav-links a::before {
@@ -85,6 +89,11 @@ nav {
   transition:
     border-color 0.2s,
     color 0.2s;
+  min-height: 44px;
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .kbd-hint:hover {
@@ -107,6 +116,11 @@ nav {
     border-color 0.2s,
     color 0.2s,
     background 0.2s;
+  min-height: 44px;
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .theme-toggle:hover {
@@ -272,6 +286,10 @@ nav {
   color: var(--text);
   cursor: pointer;
   transition: all 0.2s;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .cli-btn::before {
@@ -370,6 +388,9 @@ nav {
   font-size: 0.75rem;
   color: var(--muted);
   transition: color 0.2s;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
 }
 
 .proj-link:hover {
@@ -391,6 +412,7 @@ nav {
     border-color 0.2s,
     background 0.2s,
     transform 0.2s;
+  min-height: 44px;
 }
 
 .contact-row:hover {
@@ -532,6 +554,7 @@ footer span {
   transition:
     background 0.12s,
     border-color 0.12s;
+  min-height: 44px;
 }
 
 .pal-item:hover,
