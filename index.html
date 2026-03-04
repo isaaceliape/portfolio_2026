@@ -37,6 +37,12 @@
     <link rel="stylesheet" href="css/components.css" />
   </head>
   <body>
+    <!-- Skip to main content for keyboard users (WCAG 2.4.1) -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Screen reader announcements for dynamic content -->
+    <div aria-live="polite" aria-atomic="true" class="sr-only" id="palette-announce"></div>
+
     <div id="cursor-glow"></div>
     <div id="vim-indicator">-- NORMAL --</div>
 
@@ -67,16 +73,24 @@
       </div>
     </div>
 
-    <nav>
+    <nav aria-label="Main navigation">
       <span class="nav-logo"
         ><span class="user">ieliape</span
         ><span class="sep">@</span>portfolio<span class="muted">:~$</span></span
       >
       <div class="nav-links">
-        <a href="#about">about</a>
-        <a href="#projects">projects</a>
-        <a href="#contact">contact</a>
-        <span class="kbd-hint" id="nav-palette-btn">⌘ Ctrl+Shift+P</span>
+        <a href="#about" aria-label="Go to About section">about</a>
+        <a href="#projects" aria-label="Go to Projects section">projects</a>
+        <a href="#contact" aria-label="Go to Contact section">contact</a>
+        <span
+          class="kbd-hint"
+          id="nav-palette-btn"
+          role="button"
+          tabindex="0"
+          aria-label="Open command palette"
+        >
+          ⌘ Ctrl+Shift+P
+        </span>
         <button
           id="theme-toggle"
           class="theme-toggle"
@@ -88,7 +102,8 @@
       </div>
     </nav>
 
-    <section id="hero">
+    <main id="main-content">
+      <section id="hero" aria-label="Introduction">
       <pre class="ascii">
  ██╗ ███████╗  █████╗   █████╗   ██████╗
  ██║ ██╔════╝ ██╔══██╗ ██╔══██╗ ██╔════╝
@@ -180,7 +195,7 @@
       </div>
     </section>
 
-    <section id="about">
+    <section id="about" aria-label="About">
       <div class="term reveal">
         <div class="term-bar">
           <span class="dot dot-r"></span><span class="dot dot-y"></span
@@ -427,8 +442,9 @@
         </div>
       </div>
     </section>
+    </main>
 
-    <footer>© 2026 <span>Isaac Eliape</span> · exit 0</footer>
+    <footer role="contentinfo">© 2026 <span>Isaac Eliape</span> · exit 0</footer>
 
     <script type="module" src="js/app.js"></script>
   </body>

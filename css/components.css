@@ -1,6 +1,28 @@
 /** CSS Components: Navigation, Terminal, Hero, Projects, Contact, Palette, Vim */
 
 /* ==========================================================================
+   Skip Link (WCAG 2.4.1 Bypass Blocks)
+   ========================================================================== */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--accent);
+  color: var(--bg);
+  padding: 8px 16px;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  z-index: 10000;
+  border-radius: 0 0 4px 0;
+  transition: top 0.2s;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* ==========================================================================
    Navigation
    ========================================================================== */
 nav {
