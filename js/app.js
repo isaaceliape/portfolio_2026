@@ -3,6 +3,7 @@
 import { DATA, resolveAction } from './data.js';
 import { fuzzy, esc, highlight } from './utils.js';
 import { initAnimations } from './animations.js';
+import { initTheme, toggleTheme } from './theme.js';
 
 // DOM Element References
 const glowEl = document.getElementById("cursor-glow");
@@ -26,33 +27,6 @@ let gTimer = null;
  */
 export function navTo(id) {
   document.querySelector(id)?.scrollIntoView({ behavior: "smooth" });
-}
-
-/**
- * Get system theme preference
- * @returns {string} "light" or "dark"
- */
-function getSystemTheme() {
-  return window.matchMedia("(prefers-color-scheme: light)").matches
-    ? "light"
-    : "dark";
-}
-
-/**
- * Get current theme (manual override or system preference)
- * @returns {string} "light" or "dark"
- */
-function getCurrentTheme() {
-  return document.documentElement.dataset.theme || getSystemTheme();
-}
-
-/**
- * Toggle between light and dark themes
- * Will be enhanced in Plan 01-03 with persistence
- */
-export function toggleTheme() {
-  document.documentElement.dataset.theme =
-    getCurrentTheme() === "dark" ? "light" : "dark";
 }
 
 /**
@@ -326,6 +300,7 @@ function setupEventListeners() {
  * Initialize the application
  */
 function init() {
+  initTheme();
   initAnimations();
   setupEventListeners();
   console.log("Portfolio app initialized");
@@ -339,3 +314,4 @@ if (document.readyState === "loading") {
 }
 
 // All key functions already exported at function definitions
+export { toggleTheme };
