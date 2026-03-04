@@ -115,6 +115,15 @@ section {
     padding: 0.15rem 0.4rem;
   }
 
+  /* Mobile text for command palette hint */
+  .kbd-hint .kbd-hint-desktop {
+    display: none;
+  }
+
+  .kbd-hint .kbd-hint-mobile {
+    display: block;
+  }
+
   /* Keep theme toggle accessible on mobile */
   .nav-links .theme-toggle {
     display: flex !important;
