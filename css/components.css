@@ -801,6 +801,8 @@ footer span {
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
+  position: static;
+  z-index: auto;
 }
 
 .blog-post-nav .btn {
