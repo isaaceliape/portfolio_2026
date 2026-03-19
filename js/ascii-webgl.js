@@ -24,8 +24,8 @@ void main() {
   float dist  = length(delta);
 
   /* gentle wave ripple */
-  float wx = sin(uv.y * 14.0 + u_time * 1.6) * 0.0010;
-  float wy = cos(uv.x * 11.0 + u_time * 1.3) * 0.0007;
+  float wx = sin(uv.y * 14.0 + u_time * 1.6) * 0.0022;
+  float wy = cos(uv.x * 11.0 + u_time * 1.3) * 0.0015;
 
   /* mouse repulsion nudge */
   float push  = smoothstep(0.38, 0.0, dist) * 0.016;
@@ -49,7 +49,7 @@ void main() {
                   u_color.x * 0.50 + u_color.y * 0.50,
                   u_color.y * 0.55 + u_color.z * 0.45);
 
-  vec3 col = mix(u_color, alt, wave * 0.28);
+  vec3 col = mix(u_color, alt, wave * 0.45);
   col *= 0.82 + wave2 * 0.18;
 
   /* mouse glow */
@@ -148,6 +148,9 @@ export async function initAsciiWebGL() {
   if (!pre) return;
 
   await document.fonts.ready;
+  /* Also wait for JetBrains Mono specifically — fonts.ready can resolve
+     before a Google Fonts stylesheet finishes downloading the font files */
+  await document.fonts.load('400 1em "JetBrains Mono"').catch(() => {});
 
   /* WebGL support check */
   const testC = document.createElement('canvas');
@@ -202,6 +205,8 @@ export async function initAsciiWebGL() {
   requestAnimationFrame(() => {
     requestAnimationFrame(() => { canvas.style.opacity = '1'; });
   });
+  /* fallback: rAF doesn't fire in backgrounded tabs — use a timeout too */
+  setTimeout(() => { canvas.style.opacity = '1'; }, 200);
 
   /* ── geometry: fullscreen quad ── */
   const posBuf = gl.createBuffer();
