@@ -304,7 +304,9 @@ export const DATA = [
 export function resolveAction(item, context) {
   if (!item.action) return null;
 
-  const [type, value] = item.action.split(":");
+  const colonIdx = item.action.indexOf(":");
+  const type = item.action.slice(0, colonIdx);
+  const value = item.action.slice(colonIdx + 1);
 
   switch (type) {
     case "theme":

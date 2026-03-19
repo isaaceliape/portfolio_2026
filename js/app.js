@@ -412,6 +412,32 @@ export function printConsoleArt() {
 }
 
 /**
+ * Initialize active nav link highlighting based on scroll position
+ */
+function initActiveNav() {
+  const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
+  if (!navLinks.length) return;
+
+  const sectionIds = [...navLinks].map(a => a.getAttribute('href').slice(1));
+  const sections = sectionIds.map(id => document.getElementById(id)).filter(Boolean);
+
+  const obs = new IntersectionObserver(
+    (entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinks.forEach(a => a.classList.remove('active'));
+          const active = document.querySelector(`.nav-links a[href="#${entry.target.id}"]`);
+          if (active) active.classList.add('active');
+        }
+      });
+    },
+    { rootMargin: '-20% 0px -70% 0px' }
+  );
+
+  sections.forEach(s => obs.observe(s));
+}
+
+/**
  * Initialize the application
  */
 function init() {
@@ -419,6 +445,7 @@ function init() {
   initAnimations();
   setupEventListeners();
   updatePaletteHint();
+  initActiveNav();
 
   printConsoleArt();
   console.log("Portfolio app initialized");

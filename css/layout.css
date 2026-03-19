@@ -9,6 +9,7 @@ section {
   margin: 0 auto;
   position: relative;
   z-index: 1;
+  scroll-margin-top: 4rem;
 }
 
 /* ==========================================================================
