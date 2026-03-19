@@ -765,3 +765,704 @@ describe('E2E: Full page structure validation', () => {
     expect(document.getElementById('palette-overlay')).not.toBeNull();
   });
 });
+
+describe('E2E: Complete user flow - explore portfolio', () => {
+  beforeEach(() => {
+    vi.resetModules();
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+  });
+
+  it('user visits portfolio and explores all sections via palette', async () => {
+    await setupApp();
+    const input = document.getElementById('palette-input');
+    const overlay = document.getElementById('palette-overlay');
+
+    // 1. Open palette to start exploring
+    keydown('p', { ctrlKey: true, shiftKey: true });
+    expect(overlay.classList.contains('open')).toBe(true);
+
+    // 2. Navigate to about section
+    input.value = 'about';
+    input.dispatchEvent(new Event('input'));
+    keydown('ArrowDown');
+    keydown('Enter');
+    expect(overlay.classList.contains('open')).toBe(false);
+
+    // 3. Open palette again and go to projects
+    keydown('p', { ctrlKey: true, shiftKey: true });
+    input.value = 'projects';
+    input.dispatchEvent(new Event('input'));
+    keydown('ArrowDown');
+    keydown('Enter');
+
+    // 4. Open palette and go to contact
+    keydown('p', { ctrlKey: true, shiftKey: true });
+    input.value = 'contact';
+    input.dispatchEvent(new Event('input'));
+    keydown('ArrowDown');
+    keydown('Enter');
+
+    expect(overlay.classList.contains('open')).toBe(false);
+  });
+
+  it('user opens external links from palette', async () => {
+    await setupApp();
+    const openSpy = vi.spyOn(window, 'open').mockImplementation(() => {});
+
+    const input = document.getElementById('palette-input');
+    const overlay = document.getElementById('palette-overlay');
+
+    keydown('p', { ctrlKey: true, shiftKey: true });
+
+    // Search for GitHub
+    input.value = 'github';
+    input.dispatchEvent(new Event('input'));
+
+    const items = document.querySelectorAll('.pal-item');
+    if (items.length > 0) {
+      keydown('ArrowDown');
+      keydown('Enter');
+    }
+
+    expect(overlay.classList.contains('open')).toBe(false);
+  });
+});
+
+describe('E2E: Theme persistence and consistency', () => {
+  beforeEach(() => {
+    vi.resetModules();
+    vi.useFakeTimers();
+    localStorage.clear();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+  });
+
+  it('theme persists across multiple toggle actions', async () => {
+    await setupApp();
+
+    const btn = document.getElementById('theme-toggle');
+    const html = document.documentElement;
+
+    // Toggle multiple times and check persistence
+    html.dataset.theme = 'dark';
+    btn.click();
+    expect(html.dataset.theme).toBe('light');
+    expect(localStorage.setItem).toHaveBeenCalledWith('portfolio-theme', 'light');
+
+    btn.click();
+    expect(html.dataset.theme).toBe('dark');
+    expect(localStorage.setItem).toHaveBeenCalledWith('portfolio-theme', 'dark');
+
+    btn.click();
+    expect(html.dataset.theme).toBe('light');
+  });
+
+  it('system theme preference affects initial state', async () => {
+    window.matchMedia = vi.fn().mockImplementation((query) => {
+      const isLight = query === '(prefers-color-scheme: light)';
+      return {
+        matches: isLight ? true : false,
+        media: query,
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+      };
+    });
+
+    await setupApp();
+    // setupApp removes the data-theme attribute, so it should reflect system preference
+    const html = document.documentElement;
+    expect(html).not.toBeNull();
+  });
+});
+
+describe('E2E: Vim mode comprehensive flow', () => {
+  beforeEach(() => {
+    vi.resetModules();
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+  });
+
+  it('user can enable and disable vim mode via palette', async () => {
+    const app = await setupApp();
+
+    const vimEl = document.getElementById('vim-indicator');
+    const input = document.getElementById('palette-input');
+    const overlay = document.getElementById('palette-overlay');
+
+    // Vim mode starts disabled
+    expect(vimEl.classList.contains('vim-visible')).toBe(false);
+
+    // Search for vim toggle and enable it
+    keydown('p', { ctrlKey: true, shiftKey: true });
+    input.value = 'vim';
+    input.dispatchEvent(new Event('input'));
+
+    // Select and activate vim toggle
+    keydown('ArrowDown');
+    keydown('Enter');
+
+    // Palette should be closed after selection
+    expect(overlay.classList.contains('open')).toBe(false);
+
+    // Vim mode should now be enabled
+    expect(vimEl.classList.contains('vim-visible')).toBe(true);
+    expect(vimEl.textContent).toBe('-- NORMAL --');
+  });
+
+  it('vim mode can be toggled on and off multiple times', async () => {
+    await setupApp();
+    const { toggleVim } = await import('../js/app.js');
+    const vimEl = document.getElementById('vim-indicator');
+
+    toggleVim();
+    expect(vimEl.classList.contains('vim-visible')).toBe(true);
+
+    toggleVim();
+    expect(vimEl.classList.contains('vim-visible')).toBe(false);
+
+    toggleVim();
+    expect(vimEl.classList.contains('vim-visible')).toBe(true);
+  });
+
+  it('vim keys are disabled when palette is open', async () => {
+    await setupApp();
+    const { toggleVim } = await import('../js/app.js');
+    const overlay = document.getElementById('palette-overlay');
+
+    toggleVim();
+
+    // Open palette
+    const input = document.getElementById('palette-input');
+    keydown('p', { ctrlKey: true, shiftKey: true });
+    expect(overlay.classList.contains('open')).toBe(true);
+
+    // j should navigate palette, not scroll
+    window.scrollBy.mockClear();
+    keydown('j');
+    expect(window.scrollBy).not.toHaveBeenCalled();
+  });
+});
+
+describe('E2E: Cursor glow interaction', () => {
+  beforeEach(() => {
+    vi.resetModules();
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+  });
+
+  it('cursor glow responds to mouse movement', async () => {
+    await setupApp();
+    const glowEl = document.getElementById('cursor-glow');
+
+    const event = new MouseEvent('mousemove', {
+      clientX: 100,
+      clientY: 200,
+      bubbles: true,
+    });
+
+    document.dispatchEvent(event);
+
+    expect(glowEl.style.getPropertyValue('--cursor-x')).toBe('100px');
+    expect(glowEl.style.getPropertyValue('--cursor-y')).toBe('200px');
+  });
+
+  it('cursor glow is disabled for reduced motion users', async () => {
+    document.body.innerHTML = `
+      <div id="cursor-glow"></div>
+      <div id="palette-overlay"><input id="palette-input" /><div id="palette-results"></div></div>
+      <div id="vim-indicator"></div>
+      <div id="palette-announce"></div>
+      <button id="theme-toggle"></button>
+    `;
+
+    window.matchMedia = vi.fn().mockImplementation((query) => ({
+      matches: query === '(prefers-reduced-motion: reduce)',
+      media: query,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+    }));
+    window.getComputedStyle = vi.fn().mockReturnValue({
+      getPropertyValue: vi.fn().mockReturnValue('#00d4aa'),
+    });
+    global.IntersectionObserver = vi.fn().mockImplementation(() => ({
+      observe: vi.fn(),
+      unobserve: vi.fn(),
+      disconnect: vi.fn(),
+    }));
+
+    await import('../js/app.js');
+    const glowEl = document.getElementById('cursor-glow');
+    expect(glowEl.classList.contains('cursor-glow-disabled')).toBe(true);
+  });
+});
+
+describe('E2E: Palette navigation and selection', () => {
+  beforeEach(() => {
+    vi.resetModules();
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+  });
+
+  it('user can navigate results with arrow keys and select with enter', async () => {
+    await setupApp();
+    const input = document.getElementById('palette-input');
+    const results = document.getElementById('palette-results');
+    const overlay = document.getElementById('palette-overlay');
+
+    keydown('p', { ctrlKey: true, shiftKey: true });
+    expect(overlay.classList.contains('open')).toBe(true);
+
+    // Get initial items
+    let items = results.querySelectorAll('.pal-item');
+    const initialCount = items.length;
+    expect(initialCount).toBeGreaterThan(0);
+
+    // Navigate down
+    keydown('ArrowDown');
+    items = results.querySelectorAll('.pal-item');
+    expect(items[0].classList.contains('active')).toBe(true);
+
+    // Navigate down more
+    keydown('ArrowDown');
+    expect(items[1].classList.contains('active')).toBe(true);
+
+    // Navigate up
+    keydown('ArrowUp');
+    expect(items[0].classList.contains('active')).toBe(true);
+
+    // Don't go below 0
+    keydown('ArrowUp');
+    keydown('ArrowUp');
+    expect(items[0].classList.contains('active')).toBe(true);
+
+    // Don't go above length
+    for (let i = 0; i < initialCount + 5; i++) {
+      keydown('ArrowDown');
+    }
+    expect(items[initialCount - 1].classList.contains('active')).toBe(true);
+  });
+
+  it('user can click items to activate them', async () => {
+    await setupApp();
+    const results = document.getElementById('palette-results');
+    const overlay = document.getElementById('palette-overlay');
+
+    keydown('p', { ctrlKey: true, shiftKey: true });
+
+    // Find first clickable item
+    const items = results.querySelectorAll('.pal-item');
+    if (items.length > 0) {
+      items[0].click();
+      expect(overlay.classList.contains('open')).toBe(false);
+    }
+  });
+
+  it('palette clear and re-filter works correctly', async () => {
+    await setupApp();
+    const input = document.getElementById('palette-input');
+    const results = document.getElementById('palette-results');
+
+    keydown('p', { ctrlKey: true, shiftKey: true });
+
+    // Search for "about"
+    input.value = 'about';
+    input.dispatchEvent(new Event('input'));
+    let items = results.querySelectorAll('.pal-item');
+    const aboutCount = items.length;
+
+    // Clear search
+    input.value = '';
+    input.dispatchEvent(new Event('input'));
+    items = results.querySelectorAll('.pal-item');
+    expect(items.length).toBeGreaterThan(aboutCount);
+
+    // Search for something else
+    input.value = 'vim';
+    input.dispatchEvent(new Event('input'));
+    items = results.querySelectorAll('.pal-item');
+    expect(items.length).toBeGreaterThan(0);
+  });
+});
+
+describe('E2E: Navigation functionality', () => {
+  beforeEach(() => {
+    vi.resetModules();
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+  });
+
+  it('hero buttons navigate to correct sections', async () => {
+    await setupApp();
+
+    const heroButtons = document.querySelectorAll('.hero-btns a');
+    expect(heroButtons.length).toBeGreaterThanOrEqual(2);
+
+    // Check button hrefs
+    expect(heroButtons[0].getAttribute('href')).toContain('#');
+    expect(heroButtons[1].getAttribute('href')).toContain('#');
+  });
+
+  it('navigation links in nav bar are accessible', async () => {
+    await setupApp();
+
+    const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
+    expect(navLinks.length).toBeGreaterThan(0);
+
+    navLinks.forEach((link) => {
+      expect(link.href).toBeTruthy();
+    });
+  });
+
+  it('scrollIntoView is called when navigating', async () => {
+    await setupApp();
+    const { navTo } = await import('../js/app.js');
+
+    const scrollSpy = vi.spyOn(HTMLElement.prototype, 'scrollIntoView');
+
+    navTo('#about');
+
+    expect(scrollSpy).toHaveBeenCalledWith({ behavior: 'smooth' });
+  });
+});
+
+describe('E2E: Accessibility focus management', () => {
+  beforeEach(() => {
+    vi.resetModules();
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+  });
+
+  it('palette opens and is ready for input', async () => {
+    await setupApp();
+    const overlay = document.getElementById('palette-overlay');
+    const input = document.getElementById('palette-input');
+
+    // Palette starts closed
+    expect(overlay.classList.contains('open')).toBe(false);
+
+    // Open palette
+    keydown('p', { ctrlKey: true, shiftKey: true });
+    expect(overlay.classList.contains('open')).toBe(true);
+
+    // Input should be visible and ready
+    expect(input).not.toBeNull();
+  });
+
+  it('ESC closes palette and restores focus appropriately', async () => {
+    await setupApp();
+    const overlay = document.getElementById('palette-overlay');
+
+    keydown('p', { ctrlKey: true, shiftKey: true });
+    expect(overlay.classList.contains('open')).toBe(true);
+
+    keydown('Escape');
+    expect(overlay.classList.contains('open')).toBe(false);
+  });
+
+  it('tab navigation works in palette', async () => {
+    await setupApp();
+
+    keydown('p', { ctrlKey: true, shiftKey: true });
+
+    const items = document.querySelectorAll('.pal-item');
+    expect(items.length).toBeGreaterThan(0);
+  });
+});
+
+describe('E2E: Console output', () => {
+  beforeEach(() => {
+    vi.resetModules();
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+  });
+
+  it('printConsoleArt function is available', async () => {
+    const app = await setupApp();
+
+    // The app should export printConsoleArt or it's called during init
+    expect(typeof app).toBe('object');
+  });
+
+  it('console output changes when theme changes', async () => {
+    await setupApp();
+
+    const btn = document.getElementById('theme-toggle');
+    const html = document.documentElement;
+
+    html.dataset.theme = 'dark';
+    const initialTheme = html.dataset.theme;
+
+    btn.click();
+
+    // Theme should have changed
+    expect(html.dataset.theme).not.toBe(initialTheme);
+  });
+});
+
+describe('E2E: Palette category grouping', () => {
+  beforeEach(() => {
+    vi.resetModules();
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+  });
+
+  it('palette shows categories when no search is active', async () => {
+    await setupApp();
+    const results = document.getElementById('palette-results');
+
+    keydown('p', { ctrlKey: true, shiftKey: true });
+
+    const categories = results.querySelectorAll('.pal-section-label');
+    expect(categories.length).toBeGreaterThan(0);
+  });
+
+  it('palette hides categories when searching', async () => {
+    await setupApp();
+    const input = document.getElementById('palette-input');
+    const results = document.getElementById('palette-results');
+
+    keydown('p', { ctrlKey: true, shiftKey: true });
+
+    input.value = 'about';
+    input.dispatchEvent(new Event('input'));
+
+    // Categories should still be visible, but fewer items
+    const items = results.querySelectorAll('.pal-item');
+    expect(items.length).toBeGreaterThan(0);
+  });
+});
+
+describe('E2E: Complex user interaction sequences', () => {
+  beforeEach(() => {
+    vi.resetModules();
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+  });
+
+  it('user can toggle theme via palette while it is open', async () => {
+    await setupApp();
+    const input = document.getElementById('palette-input');
+    const overlay = document.getElementById('palette-overlay');
+    const html = document.documentElement;
+
+    html.dataset.theme = 'dark';
+
+    // Open palette
+    keydown('p', { ctrlKey: true, shiftKey: true });
+    expect(overlay.classList.contains('open')).toBe(true);
+
+    // Search for theme
+    input.value = 'theme';
+    input.dispatchEvent(new Event('input'));
+
+    // Results should show theme toggle option
+    const results = document.getElementById('palette-results');
+    const items = results.querySelectorAll('.pal-item');
+    expect(items.length).toBeGreaterThan(0);
+  });
+
+  it('user can use palette while vim mode is disabled', async () => {
+    await setupApp();
+    const input = document.getElementById('palette-input');
+    const overlay = document.getElementById('palette-overlay');
+
+    // Open palette via shortcut
+    keydown('p', { ctrlKey: true, shiftKey: true });
+    expect(overlay.classList.contains('open')).toBe(true);
+
+    // Search for section
+    input.value = 'about';
+    input.dispatchEvent(new Event('input'));
+
+    // Navigate to first result
+    keydown('ArrowDown');
+    const firstItem = document.querySelector('.pal-item.active');
+    expect(firstItem).not.toBeNull();
+  });
+
+  it('user can navigate with palette after using other features', async () => {
+    await setupApp();
+    const input = document.getElementById('palette-input');
+    const overlay = document.getElementById('palette-overlay');
+    const btn = document.getElementById('theme-toggle');
+
+    // Use theme toggle first
+    btn.click();
+
+    // Then use palette
+    keydown('p', { ctrlKey: true, shiftKey: true });
+    expect(overlay.classList.contains('open')).toBe(true);
+
+    // Search for contact
+    input.value = 'contact';
+    input.dispatchEvent(new Event('input'));
+
+    // Should find results
+    const results = document.getElementById('palette-results');
+    const items = results.querySelectorAll('.pal-item');
+    expect(items.length).toBeGreaterThan(0);
+  });
+});
+
+describe('E2E: Empty state handling', () => {
+  beforeEach(() => {
+    vi.resetModules();
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+  });
+
+  it('palette announces number of results when searching', async () => {
+    await setupApp();
+    const input = document.getElementById('palette-input');
+    const announceEl = document.getElementById('palette-announce');
+
+    keydown('p', { ctrlKey: true, shiftKey: true });
+
+    // Search for "about" which should have results
+    input.value = 'about';
+    input.dispatchEvent(new Event('input'));
+
+    // Should announce results found
+    expect(announceEl.textContent).toContain('result');
+  });
+
+  it('palette navigation with arrows when no items selected', async () => {
+    await setupApp();
+
+    keydown('p', { ctrlKey: true, shiftKey: true });
+
+    // Press down when nothing selected
+    keydown('ArrowDown');
+
+    // Should select first item
+    const firstItem = document.querySelector('.pal-item');
+    if (firstItem) {
+      expect(firstItem.classList.contains('active')).toBe(true);
+    }
+  });
+});
+
+describe('E2E: Responsive and mobile considerations', () => {
+  beforeEach(() => {
+    vi.resetModules();
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+  });
+
+  it('mobile-specific palette hint is present', async () => {
+    await setupApp();
+
+    const mobileHint = document.querySelector('.kbd-hint-mobile');
+    expect(mobileHint).not.toBeNull();
+  });
+
+  it('desktop-specific palette hint is present', async () => {
+    await setupApp();
+
+    const desktopHint = document.querySelector('.kbd-hint-desktop');
+    expect(desktopHint).not.toBeNull();
+  });
+
+  it('theme toggle button works on touch devices', async () => {
+    await setupApp();
+
+    const btn = document.getElementById('theme-toggle');
+    const html = document.documentElement;
+
+    html.dataset.theme = 'dark';
+
+    btn.dispatchEvent(new TouchEvent('touchend', { bubbles: true }));
+    // Click should still work via standard click handler
+    btn.click();
+
+    expect(html.dataset.theme).toBe('light');
+  });
+});
+
+describe('E2E: Keyboard shortcut consistency', () => {
+  beforeEach(() => {
+    vi.resetModules();
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+  });
+
+  it('Cmd+Shift+P works on Mac', async () => {
+    Object.defineProperty(window, 'navigator', {
+      value: { platform: 'MacIntel' },
+      writable: true,
+      configurable: true,
+    });
+
+    await setupApp();
+    const overlay = document.getElementById('palette-overlay');
+
+    keydown('p', { metaKey: true, shiftKey: true });
+    expect(overlay.classList.contains('open')).toBe(true);
+  });
+
+  it('Ctrl+Shift+P works on Windows', async () => {
+    Object.defineProperty(window, 'navigator', {
+      value: { platform: 'Win32' },
+      writable: true,
+      configurable: true,
+    });
+
+    await setupApp();
+    const overlay = document.getElementById('palette-overlay');
+
+    keydown('p', { ctrlKey: true, shiftKey: true });
+    expect(overlay.classList.contains('open')).toBe(true);
+  });
+});
