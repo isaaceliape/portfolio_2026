@@ -200,6 +200,13 @@ export async function initAsciiWebGL() {
   /* insert canvas before pre, then collapse pre */
   pre.parentNode.insertBefore(canvas, pre);
   pre.classList.add('ascii-webgl-hidden');
+  /* Also hide via inline styles — components.css loads async so the CSS
+     class alone may not apply in time; inline styles are immediate */
+  pre.style.setProperty('opacity', '0', 'important');
+  pre.style.setProperty('animation', 'none', 'important');
+  pre.style.height = '0';
+  pre.style.overflow = 'hidden';
+  pre.style.margin = '0';
 
   /* trigger opacity transition on next frame so it's visible */
   requestAnimationFrame(() => {
