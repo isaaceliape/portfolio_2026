@@ -303,32 +303,15 @@
   padding-top: 5rem;
 }
 
-.ascii {
-  color: var(--accent);
+.ascii-container {
   font-size: clamp(0.45rem, 1.2vw, 0.7rem);
   line-height: 1.2;
   margin-bottom: 1.5rem;
-  white-space: pre;
-  opacity: 0;
-  animation: fadeUp 0.6s 0.2s ease forwards;
-  transition: color 0.3s;
 }
 
-/* WebGL canvas replaces the pre visually; opacity/margin controlled by JS */
+/* WebGL canvas inside the container; opacity/margin controlled by JS */
 .ascii-webgl {
   display: block;
-}
-
-/* Hide the pre from view once WebGL takes over; keep it for layout reference */
-.ascii.ascii-webgl-hidden {
-  opacity: 0 !important;
-  animation: none !important;
-  pointer-events: none;
-  user-select: none;
-  /* height collapses so the canvas (before it in DOM) holds the space */
-  height: 0;
-  margin: 0;
-  overflow: hidden;
 }
 
 .hero-term {

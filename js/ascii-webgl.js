@@ -141,11 +141,28 @@ function buildTexture(gl, lines, fontSize, fontFamily) {
 
 /* ─── main export ──────────────────────────────────────────────────────────── */
 
+/* ASCII art lines — single source of truth, no <pre> element needed */
+const ASCII_LINES = [
+  ' \u2588\u2588\u2557 \u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2557  \u2588\u2588\u2588\u2588\u2588\u2557   \u2588\u2588\u2588\u2588\u2588\u2557   \u2588\u2588\u2588\u2588\u2588\u2588\u2557',
+  ' \u2588\u2588\u2551 \u2588\u2588\u2554\u2550\u2550\u2550\u2550\u255d \u2588\u2588\u2554\u2550\u2550\u2588\u2588\u2557 \u2588\u2588\u2554\u2550\u2550\u2588\u2588\u2557 \u2588\u2588\u2554\u2550\u2550\u2550\u2550\u255d',
+  ' \u2588\u2588\u2551 \u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2557 \u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2551 \u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2551 \u2588\u2588\u2551',
+  ' \u2588\u2588\u2551 \u255a\u2550\u2550\u2550\u2550\u2588\u2588\u2551 \u2588\u2588\u2554\u2550\u2550\u2588\u2588\u2551 \u2588\u2588\u2554\u2550\u2550\u2588\u2588\u2551 \u2588\u2588\u2551',
+  ' \u2588\u2588\u2551 \u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2551 \u2588\u2588\u2551  \u2588\u2588\u2551 \u2588\u2588\u2551  \u2588\u2588\u2551 \u255a\u2588\u2588\u2588\u2588\u2588\u2588\u2557',
+  ' \u255a\u2550\u255d \u255a\u2550\u2550\u2550\u2550\u2550\u2550\u255d \u255a\u2550\u255d  \u255a\u2550\u255d \u255a\u2550\u255d  \u255a\u2550\u255d  \u255a\u2550\u2550\u2550\u2550\u2550\u255d',
+  '',
+  ' \u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2557 \u2588\u2588\u2557      \u2588\u2588\u2551  \u2588\u2588\u2588\u2588\u2588\u2557  \u2588\u2588\u2588\u2588\u2588\u2588\u2557  \u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2557',
+  ' \u2588\u2588\u2554\u2550\u2550\u2550\u2550\u255d \u2588\u2588\u2551      \u2588\u2588\u2551 \u2588\u2588\u2554\u2550\u2550\u2588\u2588\u2557 \u2588\u2588\u2554\u2550\u2550\u2588\u2588\u2557 \u2588\u2588\u2554\u2550\u2550\u2550\u2550\u255d',
+  ' \u2588\u2588\u2588\u2588\u2588\u2557   \u2588\u2588\u2551      \u2588\u2588\u2551 \u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2551 \u2588\u2588\u2588\u2588\u2588\u2588\u2554\u255d \u2588\u2588\u2588\u2588\u2588\u2557',
+  ' \u2588\u2588\u2554\u2550\u2550\u255d   \u2588\u2588\u2551      \u2588\u2588\u2551 \u2588\u2588\u2554\u2550\u2550\u2588\u2588\u2551 \u2588\u2588\u2554\u2550\u2550\u2550\u255d  \u2588\u2588\u2554\u2550\u2550\u255d',
+  ' \u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2557 \u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2557 \u2588\u2588\u2551 \u2588\u2588\u2551  \u2588\u2588\u2551 \u2588\u2588\u2551      \u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2557',
+  ' \u255a\u2550\u2550\u2550\u2550\u2550\u2550\u255d \u255a\u2550\u2550\u2550\u2550\u2550\u2550\u255d \u255a\u2550\u255d \u255a\u2550\u255d  \u255a\u2550\u255d \u255a\u2550\u255d      \u255a\u2550\u2550\u2550\u2550\u2550\u2550\u255d',
+];
+
 export async function initAsciiWebGL() {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  const pre = document.querySelector('.ascii');
-  if (!pre) return;
+  const container = document.querySelector('.ascii-container');
+  if (!container) return;
 
   await document.fonts.ready;
   /* Also wait for JetBrains Mono specifically — fonts.ready can resolve
@@ -156,18 +173,12 @@ export async function initAsciiWebGL() {
   const testC = document.createElement('canvas');
   if (!testC.getContext('webgl') && !testC.getContext('experimental-webgl')) return;
 
-  /* collect computed styles while pre is still in normal flow */
-  const style      = getComputedStyle(pre);
+  /* collect font metrics from the container element */
+  const style      = getComputedStyle(container);
   const fontSize   = parseFloat(style.fontSize);
   const fontFamily = style.fontFamily;
 
-  /* trim leading/trailing newlines from the raw HTML content */
-  const lines = pre.textContent.split('\n');
-  /* drop empty leading/trailing lines added by HTML formatting */
-  while (lines.length && lines[0].trim() === '')   lines.shift();
-  while (lines.length && lines[lines.length - 1].trim() === '') lines.pop();
-
-  if (!lines.length || fontSize < 1) return;
+  if (fontSize < 1) return;
 
   /* ── create canvas & WebGL context ── */
   const canvas = document.createElement('canvas');
@@ -181,7 +192,7 @@ export async function initAsciiWebGL() {
   const prog = makeProgram(gl, VERT, FRAG);
   if (!prog) return;
 
-  const texResult = buildTexture(gl, lines, fontSize, fontFamily);
+  const texResult = buildTexture(gl, ASCII_LINES, fontSize, fontFamily);
   if (!texResult) return;
   const { tex, logicalW, logicalH } = texResult;
 
@@ -195,18 +206,10 @@ export async function initAsciiWebGL() {
   canvas.style.opacity    = '0';
   canvas.style.transition = 'opacity 0.6s ease';
   canvas.style.display    = 'block';
-  canvas.style.marginBottom = style.marginBottom || '1.5rem';
+  canvas.style.marginBottom = '1.5rem';
 
-  /* insert canvas before pre, then collapse pre */
-  pre.parentNode.insertBefore(canvas, pre);
-  pre.classList.add('ascii-webgl-hidden');
-  /* Also hide via inline styles — components.css loads async so the CSS
-     class alone may not apply in time; inline styles are immediate */
-  pre.style.setProperty('opacity', '0', 'important');
-  pre.style.setProperty('animation', 'none', 'important');
-  pre.style.height = '0';
-  pre.style.overflow = 'hidden';
-  pre.style.margin = '0';
+  /* mount canvas directly into the container */
+  container.appendChild(canvas);
 
   /* trigger opacity transition on next frame so it's visible */
   requestAnimationFrame(() => {
