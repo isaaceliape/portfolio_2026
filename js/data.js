@@ -232,14 +232,28 @@ export const DATA = [
     icon: "▶",
     title: "touch-typing-tool",
     sub: "Practice typing speed",
-    action: "open:https://github.com/isaaceliape",
+    action: "open:https://isaaceliape.github.io/typee/",
   },
   {
     category: "Projects",
     icon: "▶",
-    title: "task-time-tracker",
-    sub: "Time → money converter",
-    action: "open:https://github.com/isaaceliape",
+    title: "mark-board",
+    sub: "File-based Kanban with AI",
+    action: "open:https://github.com/isaaceliape/mark-board",
+  },
+  {
+    category: "Projects",
+    icon: "▶",
+    title: "splitfair",
+    sub: "Bill splitting for groups",
+    action: "open:https://isaaceliape.github.io/splitfair-app/",
+  },
+  {
+    category: "Projects",
+    icon: "▶",
+    title: "FASE",
+    sub: "AI workflow framework for devs",
+    action: "open:https://isaaceliape.github.io/FASE/",
   },
   {
     category: "Projects",
@@ -290,7 +304,9 @@ export const DATA = [
 export function resolveAction(item, context) {
   if (!item.action) return null;
 
-  const [type, value] = item.action.split(":");
+  const colonIdx = item.action.indexOf(":");
+  const type = item.action.slice(0, colonIdx);
+  const value = item.action.slice(colonIdx + 1);
 
   switch (type) {
     case "theme":

@@ -6,7 +6,10 @@
     <meta name="theme-color" content="#0c0c0c" media="(prefers-color-scheme: dark)" />
     <meta name="theme-color" content="#f9f9fb" media="(prefers-color-scheme: light)" />
     <title>Isaac Eliape – Frontend Engineer</title>
-    
+    <meta name="description" content="Frontend Engineer with 10+ years of commercial experience. React, TypeScript, Vue, animations, and accessible UI. Based in Dublin, Ireland. Open to new opportunities." />
+    <link rel="canonical" href="https://isaaceliape.github.io/portfolio_2026/" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://isaaceliape.github.io/portfolio_2026/" />
@@ -177,6 +180,47 @@
       <link rel="stylesheet" href="css/layout.css" />
       <link rel="stylesheet" href="css/components.css" />
     </noscript>
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Person",
+          "@id": "https://isaaceliape.github.io/portfolio_2026/#person",
+          "name": "Isaac Eliape",
+          "url": "https://isaaceliape.github.io/portfolio_2026/",
+          "jobTitle": "Frontend Engineer",
+          "description": "Frontend Engineer with 10+ years of commercial experience specialising in React, TypeScript, Vue, animations, and accessible UI.",
+          "knowsLanguage": ["en", "pt"],
+          "worksFor": {
+            "@type": "Organization",
+            "name": "Unum Ireland"
+          },
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Dublin",
+            "addressCountry": "IE"
+          },
+          "sameAs": [
+            "https://github.com/isaaceliape",
+            "https://linkedin.com/in/isaaceliape",
+            "https://x.com/isaaceliape"
+          ]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://isaaceliape.github.io/portfolio_2026/#website",
+          "url": "https://isaaceliape.github.io/portfolio_2026/",
+          "name": "Isaac Eliape Portfolio",
+          "description": "Frontend Engineer portfolio — projects, blog, and contact.",
+          "author": {
+            "@id": "https://isaaceliape.github.io/portfolio_2026/#person"
+          }
+        }
+      ]
+    }
+    </script>
     <!--
       Lighthouse Audit Results (Mobile, Simulated 4G):
       - Performance: 95+ ✓ (target: 90+)
@@ -311,6 +355,11 @@
             Bilingual <span class="acc2">PT</span> /
             <span class="acc2">EN</span> · Currently @
             <span class="hl">Unum Ireland</span>
+          </p>
+          <p>
+            <span class="status-dot" aria-hidden="true"></span
+            ><span class="acc">open to work</span> — available for new
+            opportunities
           </p>
         </div>
         <div class="prompt">
@@ -497,7 +546,7 @@
             ><span class="proj-tag">Animations</span
             ><span class="proj-tag">CMS</span>
           </div>
-          <a class="proj-link" href="http://www.isaaceliape.com" target="_blank"
+          <a class="proj-link" href="http://www.isaaceliape.com" target="_blank" rel="noopener noreferrer"
             >↗ open isaaceliape.com</a
           >
         </div>
@@ -508,35 +557,77 @@
             accuracy.
           </p>
           <div class="proj-tags">
-            <span class="proj-tag">JavaScript</span
+            <span class="proj-tag">Vue 3</span
+            ><span class="proj-tag">TypeScript</span
             ><span class="proj-tag">Web App</span>
           </div>
           <a
             class="proj-link"
-            href="https://github.com/isaaceliape"
+            href="https://isaaceliape.github.io/typee/"
             target="_blank"
-            >↗ open github</a
+            rel="noopener noreferrer"
+            >↗ open typee</a
           >
         </div>
         <div class="proj reveal d3">
-          <p class="proj-name">task-time-tracker</p>
+          <p class="proj-name">mark-board</p>
           <p class="proj-desc">
-            Converts task time into monetary value — visualising time lost and
-            gained across your workday.
+            File-based Kanban board — tasks live as markdown files in folders,
+            with AI-powered user story generation via OpenRouter.
           </p>
           <div class="proj-tags">
-            <span class="proj-tag">JavaScript</span
-            ><span class="proj-tag">SPA</span
-            ><span class="proj-tag">Productivity</span>
+            <span class="proj-tag">React</span
+            ><span class="proj-tag">TypeScript</span
+            ><span class="proj-tag">AI Integration</span>
           </div>
           <a
             class="proj-link"
-            href="https://github.com/isaaceliape"
+            href="https://github.com/isaaceliape/mark-board"
             target="_blank"
-            >↗ open github</a
+            rel="noopener noreferrer"
+            >↗ open mark-board</a
           >
         </div>
         <div class="proj reveal d4">
+          <p class="proj-name">splitfair</p>
+          <p class="proj-desc">
+            Bill-splitting web app for groups — touch-optimised with shareable
+            result graphics exported via canvas.
+          </p>
+          <div class="proj-tags">
+            <span class="proj-tag">Web Components</span
+            ><span class="proj-tag">Vite</span
+            ><span class="proj-tag">Canvas</span>
+          </div>
+          <a
+            class="proj-link"
+            href="https://isaaceliape.github.io/splitfair-app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            >↗ open splitfair</a
+          >
+        </div>
+        <div class="proj reveal d5">
+          <p class="proj-name">FASE</p>
+          <p class="proj-desc">
+            AI workflow framework with 12 specialised agents and 32 CLI
+            commands. Published on npm — run via npx fase-ai.
+          </p>
+          <div class="proj-tags">
+            <span class="proj-tag">JavaScript</span
+            ><span class="proj-tag">CLI</span
+            ><span class="proj-tag">AI Agents</span
+            ><span class="proj-tag">npm</span>
+          </div>
+          <a
+            class="proj-link"
+            href="https://isaaceliape.github.io/FASE/"
+            target="_blank"
+            rel="noopener noreferrer"
+            >↗ open FASE</a
+          >
+        </div>
+        <div class="proj reveal d6">
           <p class="proj-name">unum-ireland</p>
           <p class="proj-desc">
             Scalable, accessible UI components and web experiences for a global
@@ -547,7 +638,7 @@
             ><span class="proj-tag">TypeScript</span
             ><span class="proj-tag">Accessibility</span>
           </div>
-          <a class="proj-link" href="https://www.unum.com" target="_blank"
+          <a class="proj-link" href="https://www.unum.com" target="_blank" rel="noopener noreferrer"
             >↗ open unum.com</a
           >
         </div>
@@ -571,7 +662,7 @@
             >
             <span class="cmd">cat contact.json</span>
           </div>
-          <div class="output" class="mb-1">
+          <div class="output mb-1">
             <p>
               <span class="muted"
                 ># Open to new opportunities, collaborations &amp; frontend
@@ -588,6 +679,7 @@
               class="contact-row"
               href="https://linkedin.com/in/isaaceliape"
               target="_blank"
+              rel="noopener noreferrer"
               ><span class="lbl">linkedin</span
               ><span class="val">linkedin.com/in/isaaceliape</span></a
             >
@@ -595,6 +687,7 @@
               class="contact-row"
               href="https://github.com/isaaceliape"
               target="_blank"
+              rel="noopener noreferrer"
               ><span class="lbl">github</span
               ><span class="val">github.com/isaaceliape</span></a
             >
@@ -602,6 +695,7 @@
               class="contact-row"
               href="https://x.com/isaaceliape"
               target="_blank"
+              rel="noopener noreferrer"
               ><span class="lbl">x / twitter</span
               ><span class="val">@isaaceliape</span></a
             >

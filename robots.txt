@@ -23,5 +23,4 @@ Disallow: /.planning/
 Disallow: /.claude/
 
 # Sitemap location
-# TODO: Replace YOUR_GITHUB_USERNAME with actual GitHub username
 Sitemap: https://isaaceliape.github.io/portfolio_2026/sitemap.xml
