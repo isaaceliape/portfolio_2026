@@ -312,12 +312,9 @@
   transition: color 0.3s;
 }
 
-/* WebGL canvas replaces the pre visually */
+/* WebGL canvas replaces the pre visually; opacity/margin controlled by JS */
 .ascii-webgl {
   display: block;
-  margin-bottom: 1.5rem;
-  opacity: 0;
-  animation: fadeUp 0.6s 0.2s ease forwards;
 }
 
 /* Hide the pre from view once WebGL takes over; keep it for layout reference */
