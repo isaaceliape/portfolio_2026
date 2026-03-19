@@ -5,25 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#0c0c0c" media="(prefers-color-scheme: dark)" />
     <meta name="theme-color" content="#f9f9fb" media="(prefers-color-scheme: light)" />
-    <title>The Future of AI in Web Development — Isaac Eliape</title>
+    <title>Building a Touch Typing Tool with Vue 3 — Isaac Eliape</title>
 
-    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article" />
     <meta property="og:url" content="https://isaaceliape.github.io/portfolio_2026/blog/post-2.html" />
-    <meta property="og:title" content="The Future of AI in Web Development" />
-    <meta property="og:description" content="Where AI adds value and where human creativity remains irreplaceable in the web development process." />
+    <meta property="og:title" content="Building a Touch Typing Tool with Vue 3 and TypeScript" />
+    <meta property="og:description" content="How I built touch-typing-tool — the real-time keystroke logic, WPM calculation, and UX decisions that make a typing trainer feel responsive." />
     <meta property="og:site_name" content="Isaac Eliape Portfolio" />
     <meta property="og:image" content="https://isaaceliape.github.io/portfolio_2026/og_image_dark.png" />
-    <meta property="article:published_time" content="2026-03-04" />
+    <meta property="article:published_time" content="2026-03-12" />
 
-    <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content="https://isaaceliape.github.io/portfolio_2026/blog/post-2.html" />
-    <meta property="twitter:title" content="The Future of AI in Web Development" />
-    <meta property="twitter:description" content="Where AI adds value and where human creativity remains irreplaceable in the web development process." />
+    <meta property="twitter:title" content="Building a Touch Typing Tool with Vue 3 and TypeScript" />
+    <meta property="twitter:description" content="How I built touch-typing-tool — the real-time keystroke logic, WPM calculation, and UX decisions that make a typing trainer feel responsive." />
     <meta property="twitter:image" content="https://isaaceliape.github.io/portfolio_2026/og_image_dark.png" />
 
-    <!-- Preconnect to Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet" />
@@ -32,9 +29,7 @@
       (function() {
         const STORAGE_KEY = 'portfolio-theme';
         let theme;
-        try {
-          theme = localStorage.getItem(STORAGE_KEY);
-        } catch (e) {}
+        try { theme = localStorage.getItem(STORAGE_KEY); } catch (e) {}
         if (!theme) {
           theme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
         }
@@ -83,7 +78,7 @@
       <div class="nav-links">
         <a href="../index.html#about">about</a>
         <a href="../index.html#projects">projects</a>
-        <a href="index.html">blog</a>
+        <a href="index.html" aria-current="page">blog</a>
         <a href="../index.html#contact">contact</a>
         <span class="kbd-hint" id="nav-palette-btn" role="button" tabindex="0" aria-label="Open command palette"><span class="kbd-hint-desktop">⌘ Ctrl+Shift+P</span><span class="kbd-hint-mobile">cmd pallet</span></span>
         <button id="theme-toggle" class="theme-toggle" aria-label="Switch to light mode" type="button">☀</button>
@@ -99,126 +94,111 @@
             >
             <span class="cmd">cat post-2.md</span>
           </div>
-
-          <h1 id="post-title" class="blog-post-title">The Future of AI in Web Development</h1>
+          <h1 id="post-title" class="blog-post-title">Building a Touch Typing Tool with Vue 3 and TypeScript</h1>
           <div class="blog-post-meta">
-            <time datetime="2026-03-04">March 4, 2026</time>
-            <span class="blog-post-reading-time">6 min read</span>
+            <time datetime="2026-03-12">March 12, 2026</time>
+            <span>5 min read</span>
           </div>
         </header>
 
         <div class="blog-post-content reveal d1">
           <p class="lead">
-            AI is reshaping how we build for the web. From code generation to intelligent
-            design systems, the tools we use are evolving rapidly. But as powerful as these
-            tools become, there are places where human creativity remains irreplaceable.
+            I built touch-typing-tool to sharpen my own typing speed and accuracy. What started
+            as a quick Vue 3 experiment turned into a lesson in input handling, real-time state
+            management, and the surprisingly tricky UX of making feedback feel instant.
           </p>
 
-          <h2>The Rise of AI-Assisted Coding</h2>
+          <h2>Why Vue 3 and TypeScript?</h2>
 
           <p>
-            Tools like GitHub Copilot, ChatGPT, and Claude have changed how I write code.
-            They excel at:
+            Most of my professional work lives in React, so building side projects in Vue keeps
+            the comparison fresh and honest. Vue 3's Composition API is genuinely pleasant to
+            work with — <code>ref</code>, <code>computed</code>, and <code>watchEffect</code>
+            map cleanly onto the reactive state a typing tool needs. TypeScript catches the
+            category of bugs that show up when you're tracking keystrokes, indices, and timing
+            all at once.
           </p>
 
-          <ul>
-            <li>Boilerplate generation and repetitive patterns</li>
-            <li>Documentation and comment writing</li>
-            <li>Explaining unfamiliar codebases</li>
-            <li>Debugging with fresh perspectives</li>
-            <li>Learning new APIs and frameworks</li>
-          </ul>
+          <h2>The Keystroke Logic</h2>
 
           <p>
-            These aren't just conveniences—they're force multipliers. Tasks that used to
-            take hours now take minutes. But this efficiency comes with caveats.
-          </p>
-
-          <h2>Where AI Falls Short</h2>
-
-          <p>
-            AI models are pattern matchers, not thinkers. They can produce code that looks
-            correct but misses the bigger picture:
+            The core loop is straightforward: compare each typed character against the expected
+            character at the current cursor position, advance on a match, mark an error on a
+            mismatch. The tricky part is deciding how errors behave. Options:
           </p>
 
           <ul>
-            <li>
-              <strong>Architecture decisions:</strong> AI can't understand your business
-              constraints, team structure, or long-term maintenance needs.
-            </li>
-            <li>
-              <strong>User experience:</strong> It can generate a form, but it can't
-              understand the emotional journey of someone filling it out.
-            </li>
-            <li>
-              <strong>Accessibility:</strong> AI often produces technically functional
-              but inaccessible interfaces.
-            </li>
-            <li>
-              <strong>Performance tradeoffs:</strong> It doesn't know your bundle budget
-              or your users' network conditions.
-            </li>
+            <li>Block on error — user must fix before advancing (strict mode)</li>
+            <li>Allow through — mark incorrect characters, continue typing</li>
+            <li>Count errors but permit free movement</li>
           </ul>
 
-          <h2>The Human Edge</h2>
-
           <p>
-            What separates good developers from AI-generated code is judgment. We bring:
+            I went with block-on-error for the default mode. It's more frustrating initially,
+            but it builds cleaner muscle memory — the goal of a typing trainer. The key insight
+            is that the input field itself should have zero visible UI chrome. Users should feel
+            like they're typing directly onto the text, not into a box.
           </p>
 
-          <ul>
-            <li><strong>Context awareness:</strong> Understanding stakeholder needs, technical debt, and business goals</li>
-            <li><strong>Creativity:</strong> Inventing novel solutions to unique problems</li>
-            <li><strong>Empathy:</strong> Building for real humans with diverse needs and abilities</li>
-            <li><strong>Ethics:</strong> Making value-based decisions about data, privacy, and impact</li>
-          </ul>
+          <pre><code>// Track per-character state
+type CharState = 'pending' | 'correct' | 'incorrect';
 
-          <h2>Finding the Balance</h2>
+const chars = computed(() =>
+  prompt.value.split('').map((ch, i) => ({
+    char: ch,
+    state: getCharState(i) as CharState,
+  }))
+);</code></pre>
 
-          <p>
-            The developers who thrive will be those who treat AI as a tool, not a replacement.
-            Use it to accelerate the routine so you can focus on the exceptional:
-          </p>
-
-          <ul>
-            <li>Let AI handle the boilerplate; you handle the architecture</li>
-            <li>Let AI suggest implementations; you evaluate and refine</li>
-            <li>Let AI write tests; you define what matters to test</li>
-            <li>Let AI optimize; you decide what to optimize for</li>
-          </ul>
-
-          <h2>Looking Ahead</h2>
+          <h2>WPM Calculation</h2>
 
           <p>
-            AI in web development isn't a threat—it's an evolution. The role of the developer
-            is shifting from pure implementer to orchestrator, strategist, and quality guardian.
-            Those who embrace this shift while doubling down on uniquely human skills will
-            find themselves more valuable than ever.
+            Words per minute is conventionally calculated as characters typed divided by 5
+            (the average English word length), divided by minutes elapsed. The important detail
+            is when you start the timer: on the first keypress, not on page load. Starting the
+            clock too early inflates the apparent difficulty; starting it too late means the
+            first burst of typing is unmetered.
           </p>
 
           <p>
-            The future belongs to developers who can wield AI effectively while bringing
-            judgment, creativity, and empathy to the work. That's the skillset I'm cultivating.
+            Accuracy is a separate metric: correct characters divided by total keystrokes
+            (including backspaces in some modes). Displaying both live prevents users from
+            gaming one at the expense of the other.
+          </p>
+
+          <h2>Making Feedback Feel Instant</h2>
+
+          <p>
+            Perceived latency between a keypress and visual feedback is the most important UX
+            property of a typing tool. Anything over about 50ms feels sluggish. The solution
+            is keeping all state in reactive primitives that update synchronously on each
+            keyboard event — no async operations, no debouncing on the hot path, no DOM
+            queries inside the event handler.
+          </p>
+
+          <p>
+            The final touch was using CSS custom properties to drive character colour. A single
+            class toggle on each character span drives the correct/incorrect/cursor state
+            without triggering layout, keeping the render budget well within frame even on
+            long prompts.
           </p>
         </div>
 
         <footer class="blog-post-footer reveal d2">
           <div class="blog-post-tags">
-            <span class="blog-tag">AI</span>
-            <span class="blog-tag">Web Development</span>
-            <span class="blog-tag">Future</span>
+            <span class="blog-tag">Vue 3</span>
+            <span class="blog-tag">TypeScript</span>
+            <span class="blog-tag">Web App</span>
           </div>
-
           <nav class="blog-post-nav" aria-label="Post navigation">
-            <a href="index.html" class="btn">← Back to Blog</a>
-            <a href="../index.html" class="btn">Portfolio Home →</a>
+            <a href="post-1.html" class="btn">← Previous post</a>
+            <a href="post-3.html" class="btn">Next post →</a>
           </nav>
         </footer>
       </article>
     </main>
 
     <footer role="contentinfo">© 2026 <span>Isaac Eliape</span> · exit 0</footer>
-
     <script type="module" src="../js/app.js"></script>
   </body>
 </html>
