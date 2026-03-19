@@ -79,7 +79,25 @@
         --glow-color: rgba(0, 212, 170, 0.05);
       }
       
-      /* Light theme variables */
+      /* Light theme variables - applied when data-theme="light" is set by FOUC script */
+      :root[data-theme="light"] {
+        --bg: #f9f9fb;
+        --surface: #ffffff;
+        --surface2: #f0f1f5;
+        --border: #dde0ea;
+        --border-bright: #c8ccd8;
+        --text: #2c2f3d;
+        --muted: #8b90a8;
+        --accent: #008ec4;
+        --accent2: #7c5af5;
+        --warn: #da6800;
+        --err: #d43552;
+        --term-bar: #e8eaf0;
+        --scanline: rgba(0, 0, 0, 0.015);
+        --glow-color: rgba(0, 142, 196, 0.06);
+      }
+
+      /* Fallback for when no data-theme is set (before JS runs) */
       @media (prefers-color-scheme: light) {
         :root:not([data-theme]) {
           --bg: #f9f9fb;
