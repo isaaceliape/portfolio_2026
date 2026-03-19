@@ -20,7 +20,6 @@ varying vec2 v_uv;
 void main() {
   vec2 uv = v_uv;
 
-  /* --- mouse proximity --- */
   vec2 delta = uv - u_mouse;
   float dist  = length(delta);
 
@@ -29,43 +28,39 @@ void main() {
   float wy = cos(uv.x * 11.0 + u_time * 1.3) * 0.0007;
 
   /* mouse repulsion nudge */
-  float push   = smoothstep(0.38, 0.0, dist) * 0.016;
-  vec2  repel  = normalize(delta + vec2(0.00001)) * push;
+  float push  = smoothstep(0.38, 0.0, dist) * 0.016;
+  vec2  repel = normalize(delta + vec2(0.00001, 0.00001)) * push;
 
-  /* chromatic aberration proportional to mouse proximity */
+  /* chromatic aberration near cursor */
   float ca = smoothstep(0.30, 0.0, dist) * 0.0045;
 
   vec2 uv2 = uv + vec2(wx, wy) + repel;
 
-  /* sample alpha channel with slight RGB split */
   float aR = texture2D(u_tex, uv2 + vec2( ca, 0.0)).a;
   float aG = texture2D(u_tex, uv2               ).a;
   float aB = texture2D(u_tex, uv2 - vec2( ca, 0.0)).a;
   float alpha = max(aR, max(aG, aB));
 
-  /* --- colour animation --- */
+  /* colour wave */
   float wave  = sin(uv.x * 5.0 - u_time * 0.75) * 0.5 + 0.5;
   float wave2 = cos(uv.y * 4.0 + u_time * 0.50) * 0.5 + 0.5;
 
-  /* secondary hue derived from swizzled accent (adds warmth / contrast) */
   vec3 alt = vec3(u_color.z * 0.80,
                   u_color.x * 0.50 + u_color.y * 0.50,
                   u_color.y * 0.55 + u_color.z * 0.45);
 
   vec3 col = mix(u_color, alt, wave * 0.28);
-  col *= 0.82 + wave2 * 0.18;   /* subtle brightness pulse */
+  col *= 0.82 + wave2 * 0.18;
 
-  /* mouse glow — brightens characters near cursor */
+  /* mouse glow */
   float glow = smoothstep(0.30, 0.0, dist);
   col = col + (1.0 - col) * glow * 0.50;
 
-  /* apply chromatic spread so each channel is fractionally offset */
   vec3 final = vec3(aR, aG, aB) * col;
-
   gl_FragColor = vec4(final, alpha);
 }`;
 
-/* ─── helpers ─────────────────────────────────────────────────────────────── */
+/* ─── helpers ──────────────────────────────────────────────────────────────── */
 
 function hexToRgb(hex) {
   hex = hex.trim().replace('#', '');
@@ -105,35 +100,33 @@ function makeProgram(gl, vertSrc, fragSrc) {
 }
 
 /**
- * Render the ASCII text to an offscreen 2D canvas and upload as a WebGL
- * texture. Returns { tex, logicalW, logicalH } where the logical dimensions
- * are in CSS pixels.
+ * Render ASCII text to an offscreen canvas and upload as a WebGL texture.
+ * Returns { tex, logicalW, logicalH } in CSS pixels.
  */
-function buildTexture(gl, text, fontSize, fontFamily) {
-  const dpr   = window.devicePixelRatio || 1;
-  const lh    = Math.ceil(fontSize * 1.2);          // matches CSS line-height
-  const lines = text.split('\n');
+function buildTexture(gl, lines, fontSize, fontFamily) {
+  const dpr = window.devicePixelRatio || 1;
+  const lh  = Math.ceil(fontSize * 1.2);
 
   /* measure the widest line */
   const probe = document.createElement('canvas');
   const px    = probe.getContext('2d');
   px.font     = `400 ${fontSize}px ${fontFamily}`;
-  const logicalW = Math.ceil(Math.max(...lines.map(l => px.measureText(l).width)));
+  let logicalW = Math.ceil(Math.max(...lines.map(l => px.measureText(l).width)));
   const logicalH = lh * lines.length;
 
-  /* create hi-DPI offscreen canvas */
-  const oc    = document.createElement('canvas');
-  oc.width    = Math.ceil(logicalW * dpr);
-  oc.height   = Math.ceil(logicalH * dpr);
-  const ctx   = oc.getContext('2d');
-  ctx.scale(dpr, dpr);
-  ctx.font          = `400 ${fontSize}px ${fontFamily}`;
-  ctx.fillStyle     = 'white';
-  ctx.textBaseline  = 'top';
+  /* guard against zero dimensions */
+  if (logicalW < 1 || logicalH < 1) return null;
 
+  const oc  = document.createElement('canvas');
+  oc.width  = Math.ceil(logicalW * dpr);
+  oc.height = Math.ceil(logicalH * dpr);
+  const ctx = oc.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.font         = `400 ${fontSize}px ${fontFamily}`;
+  ctx.fillStyle    = 'white';
+  ctx.textBaseline = 'top';
   lines.forEach((line, i) => ctx.fillText(line, 0, i * lh));
 
-  /* upload – flip Y so texture coords match clip space */
   const tex = gl.createTexture();
   gl.bindTexture(gl.TEXTURE_2D, tex);
   gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
@@ -146,7 +139,7 @@ function buildTexture(gl, text, fontSize, fontFamily) {
   return { tex, logicalW, logicalH };
 }
 
-/* ─── main export ─────────────────────────────────────────────────────────── */
+/* ─── main export ──────────────────────────────────────────────────────────── */
 
 export async function initAsciiWebGL() {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -154,21 +147,26 @@ export async function initAsciiWebGL() {
   const pre = document.querySelector('.ascii');
   if (!pre) return;
 
-  /* fonts must be ready so measureText is accurate */
   await document.fonts.ready;
 
-  /* WebGL availability check */
+  /* WebGL support check */
   const testC = document.createElement('canvas');
-  const testG = testC.getContext('webgl') || testC.getContext('experimental-webgl');
-  if (!testG) return;
+  if (!testC.getContext('webgl') && !testC.getContext('experimental-webgl')) return;
 
-  /* grab metrics from the live pre element before hiding it */
+  /* collect computed styles while pre is still in normal flow */
   const style      = getComputedStyle(pre);
   const fontSize   = parseFloat(style.fontSize);
   const fontFamily = style.fontFamily;
-  const text       = pre.textContent;
 
-  /* ── create WebGL canvas ── */
+  /* trim leading/trailing newlines from the raw HTML content */
+  const lines = pre.textContent.split('\n');
+  /* drop empty leading/trailing lines added by HTML formatting */
+  while (lines.length && lines[0].trim() === '')   lines.shift();
+  while (lines.length && lines[lines.length - 1].trim() === '') lines.pop();
+
+  if (!lines.length || fontSize < 1) return;
+
+  /* ── create canvas & WebGL context ── */
   const canvas = document.createElement('canvas');
   canvas.className = 'ascii-webgl';
   canvas.setAttribute('aria-hidden', 'true');
@@ -177,26 +175,35 @@ export async function initAsciiWebGL() {
           || canvas.getContext('experimental-webgl', { alpha: true, premultipliedAlpha: false });
   if (!gl) return;
 
-  /* ── compile shaders ── */
   const prog = makeProgram(gl, VERT, FRAG);
   if (!prog) return;
 
-  /* ── build texture ── */
-  const { tex, logicalW, logicalH } = buildTexture(gl, text, fontSize, fontFamily);
+  const texResult = buildTexture(gl, lines, fontSize, fontFamily);
+  if (!texResult) return;
+  const { tex, logicalW, logicalH } = texResult;
 
   const dpr = window.devicePixelRatio || 1;
-  canvas.width         = Math.ceil(logicalW * dpr);
-  canvas.height        = Math.ceil(logicalH * dpr);
-  canvas.style.width   = logicalW + 'px';
-  canvas.style.height  = logicalH + 'px';
+  canvas.width        = Math.ceil(logicalW * dpr);
+  canvas.height       = Math.ceil(logicalH * dpr);
+  canvas.style.width  = logicalW + 'px';
+  canvas.style.height = logicalH + 'px';
 
-  /* insert canvas in place of pre, then hide pre (keep for a11y via aria) */
+  /* fade in via JS — reliable regardless of async CSS load state */
+  canvas.style.opacity    = '0';
+  canvas.style.transition = 'opacity 0.6s ease';
+  canvas.style.display    = 'block';
+  canvas.style.marginBottom = style.marginBottom || '1.5rem';
+
+  /* insert canvas before pre, then collapse pre */
   pre.parentNode.insertBefore(canvas, pre);
   pre.classList.add('ascii-webgl-hidden');
 
-  /* ── fullscreen quad geometry ── */
-  //  positions: two triangles covering clip space (-1,-1) → (1,1)
-  //  UVs: (0,0) = bottom-left, (1,1) = top-right (matches UNPACK_FLIP_Y)
+  /* trigger opacity transition on next frame so it's visible */
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => { canvas.style.opacity = '1'; });
+  });
+
+  /* ── geometry: fullscreen quad ── */
   const posBuf = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, posBuf);
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
@@ -224,13 +231,13 @@ export async function initAsciiWebGL() {
   gl.clearColor(0, 0, 0, 0);
 
   /* ── mouse / touch tracking ── */
-  let mx = 0.5, my = 0.5;       // smoothed
-  let tmx = -1.0, tmy = -1.0;  // target (start off-canvas so no initial glow)
+  let mx = -1.0, my = -1.0;  /* start off-canvas so no initial glow */
+  let tmx = mx, tmy = my;
 
   function updateMouse(cx, cy) {
     const r = canvas.getBoundingClientRect();
     tmx = (cx - r.left)  / r.width;
-    tmy = 1.0 - (cy - r.top) / r.height; // flip Y for WebGL
+    tmy = 1.0 - (cy - r.top) / r.height;
   }
 
   document.addEventListener('mousemove', e => updateMouse(e.clientX, e.clientY));
@@ -241,20 +248,18 @@ export async function initAsciiWebGL() {
   /* ── render loop ── */
   const t0 = performance.now();
   let rafId = 0;
-  let active = false;
+  let paused = false;
 
   function render() {
-    if (!active) return;
+    if (paused) return;
     const time = (performance.now() - t0) / 1000;
 
-    /* lerp mouse for smoothness */
     mx += (tmx - mx) * 0.09;
     my += (tmy - my) * 0.09;
 
-    /* read current accent colour every frame (handles theme toggle) */
     const accentHex = getComputedStyle(document.documentElement)
                         .getPropertyValue('--accent').trim();
-    const [r, g, b] = hexToRgb(accentHex);
+    const [r, g, b] = hexToRgb(accentHex || '#00d4aa');
 
     gl.viewport(0, 0, canvas.width, canvas.height);
     gl.clear(gl.COLOR_BUFFER_BIT);
@@ -280,17 +285,28 @@ export async function initAsciiWebGL() {
     rafId = requestAnimationFrame(render);
   }
 
-  function start() { if (!active) { active = true; render(); } }
-  function stop()  { active = false; cancelAnimationFrame(rafId); }
+  /* start immediately */
+  render();
 
-  /* pause when scrolled out of view */
-  const io = new IntersectionObserver(entries => {
-    entries[0].isIntersecting ? start() : stop();
-  }, { threshold: 0 });
-  io.observe(canvas);
+  /* pause when scrolled out of view or tab hidden */
+  new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting) {
+      if (paused) { paused = false; render(); }
+    } else {
+      paused = true;
+      cancelAnimationFrame(rafId);
+    }
+  }, { threshold: 0 }).observe(canvas);
 
-  /* pause when tab is hidden */
   document.addEventListener('visibilitychange', () => {
-    document.hidden ? stop() : start();
+    if (document.hidden) {
+      paused = true;
+      cancelAnimationFrame(rafId);
+    } else if (!paused) {
+      render();
+    } else {
+      paused = false;
+      render();
+    }
   });
 }
