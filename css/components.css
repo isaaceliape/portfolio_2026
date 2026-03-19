@@ -312,6 +312,26 @@
   transition: color 0.3s;
 }
 
+/* WebGL canvas replaces the pre visually */
+.ascii-webgl {
+  display: block;
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  animation: fadeUp 0.6s 0.2s ease forwards;
+}
+
+/* Hide the pre from view once WebGL takes over; keep it for layout reference */
+.ascii.ascii-webgl-hidden {
+  opacity: 0 !important;
+  animation: none !important;
+  pointer-events: none;
+  user-select: none;
+  /* height collapses so the canvas (before it in DOM) holds the space */
+  height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
 .hero-term {
   opacity: 0;
   animation: fadeUp 0.6s 0.5s ease forwards;

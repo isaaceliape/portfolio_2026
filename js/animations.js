@@ -1,4 +1,5 @@
-/** Animation module - cursor glow, typewriter, and reveal animations */
+/** Animation module - cursor glow, typewriter, reveal animations, and WebGL ASCII art */
+import { initAsciiWebGL } from './ascii-webgl.js';
 
 /**
  * Check if user prefers reduced motion
@@ -114,4 +115,5 @@ export function initAnimations() {
   initCursorGlow();
   initTypewriter();
   initRevealAnimations();
+  initAsciiWebGL();
 }
