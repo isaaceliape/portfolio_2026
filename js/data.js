@@ -237,9 +237,9 @@ export const DATA = [
   {
     category: "Projects",
     icon: "▶",
-    title: "task-time-tracker",
-    sub: "Time → money converter",
-    action: "open:https://github.com/isaaceliape",
+    title: "mark-board",
+    sub: "File-based Kanban with AI",
+    action: "open:https://github.com/isaaceliape/mark-board",
   },
   {
     category: "Projects",
