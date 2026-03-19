@@ -232,7 +232,7 @@ export const DATA = [
     icon: "▶",
     title: "touch-typing-tool",
     sub: "Practice typing speed",
-    action: "open:https://github.com/isaaceliape",
+    action: "open:https://isaaceliape.github.io/typee/",
   },
   {
     category: "Projects",
@@ -240,6 +240,20 @@ export const DATA = [
     title: "task-time-tracker",
     sub: "Time → money converter",
     action: "open:https://github.com/isaaceliape",
+  },
+  {
+    category: "Projects",
+    icon: "▶",
+    title: "splitfair",
+    sub: "Bill splitting for groups",
+    action: "open:https://isaaceliape.github.io/splitfair-app/",
+  },
+  {
+    category: "Projects",
+    icon: "▶",
+    title: "FASE",
+    sub: "AI workflow framework for devs",
+    action: "open:https://isaaceliape.github.io/FASE/",
   },
   {
     category: "Projects",
