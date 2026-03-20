@@ -12,10 +12,10 @@ void main() {
 const FRAG = `
 precision mediump float;
 uniform sampler2D u_tex;
-uniform sampler2D u_char_tex;
 uniform float u_time;
 uniform vec2 u_mouse;
 uniform vec3 u_color;
+uniform float u_broken;
 varying vec2 v_uv;
 
 void main() {
@@ -27,26 +27,32 @@ void main() {
   /* subtle noise */
   float noise = fract(sin(dot(uv, vec2(12.9898, 78.233))) * 43758.5453) * 0.05;
 
-  /* terminal column effect - scroll characters over time */
-  float scrollOffset = mod(u_time * 0.5 + uv.y * 2.0, 1.0);
-  
-  /* mouse repulsion nudge */
+  /* mouse interaction - break effect near cursor */
   vec2 delta = uv - u_mouse;
-  float dist  = length(delta);
-  float push  = smoothstep(0.38, 0.0, dist) * 0.016;
-  vec2  repel = normalize(delta + vec2(0.00001, 0.00001)) * push;
-
+  float dist = length(delta);
+  
+  /* broken text effect near mouse */
+  float breakRadius = 0.15;
+  float breakRange = smoothstep(breakRadius, breakRadius * 0.7, dist);
+  
+  /* char distortion based on break amount */
+  float charDist = sin(u_time * 20.0 + uv.x * 30.0 + uv.y * 20.0) * 0.1 * breakRange;
+  float charDist2 = cos(u_time * 15.0 + uv.y * 40.0) * 0.08 * breakRange;
+  
+  /* apply distortion based on break state */
+  vec2 uvDistorted = uv + vec2(charDist, charDist2) * u_broken;
+  
   /* chromatic aberration near cursor */
   float ca = smoothstep(0.30, 0.0, dist) * 0.0045;
+  vec2 uvCB = uvDistorted + vec2( ca, 0.0);
+  vec2 uvCG = uvDistorted;
+  vec2 uvCC = uvDistorted - vec2( ca, 0.0);
 
-  vec2 uv2 = uv + repel;
-
-  /* read from main texture with scanning and slight distortion */
-  float aR = texture2D(u_tex, uv2 + vec2( ca, 0.0)).a;
-  float aG = texture2D(u_tex, uv2               ).a;
-  float aB = texture2D(u_tex, uv2 - vec2( ca, 0.0)).a;
+  /* read from texture with distortion */
+  float aR = texture2D(u_tex, uvCB).a;
+  float aG = texture2D(u_tex, uvCG).a;
+  float aB = texture2D(u_tex, uvCC).a;
   
-  /* add terminal glow effect */
   vec3 baseColor = vec3(aR, aG, aB) * u_color;
   float alpha = max(aR, max(aG, aB));
 
@@ -54,20 +60,21 @@ void main() {
   float cursorBlink = mod(floor(u_time * 5.0), 2.0);
   float cursorDist = length(uv - u_mouse);
   float cursorEffect = smoothstep(0.02, 0.0, cursorDist) * cursorBlink;
+  
+  /* only add cursor when not broken */
+  cursorEffect = cursorEffect * (1.0 - min(u_broken * 2.0, 1.0));
   baseColor += cursorEffect * vec3(1.0, 1.0, 1.0);
 
-  /* introduce character distortion based on time */
-  float charDistortion = sin(u_time * 3.0 + uv.x * 20.0) * 0.02;
-  
+  /* mouse glow effect - reduced when broken */
+  float glow = smoothstep(0.25, 0.0, dist);
+  float activeGlow = glow * (1.0 - min(u_broken * 1.5, 1.0));
+  baseColor = baseColor + (vec3(1.0) - baseColor) * activeGlow * 0.30;
+
   /* terminal text flicker effect */
   float flicker = fract(sin(u_time * 60.0 + uv.y * 50.0) * 0.5) * 0.1;
   
-  /* mouse glow effect */
-  float glow = smoothstep(0.25, 0.0, dist);
-  baseColor = baseColor + (vec3(1.0) - baseColor) * glow * 0.30;
-
   /* combine all terminal effects */
-  vec3 final = (baseColor + charDistortion) * scanline + noise + flicker;
+  vec3 final = (baseColor + charDist * 0.5) * scanline + noise + flicker;
   gl_FragColor = vec4(final, alpha);
 }`;
 
@@ -248,32 +255,69 @@ export async function initAsciiWebGL() {
     1, 0,   1, 1,   0, 1,
   ]), gl.STATIC_DRAW);
 
-  /* ── uniform / attribute locations ── */
-  const aPos   = gl.getAttribLocation(prog, 'a_pos');
-  const aUV    = gl.getAttribLocation(prog, 'a_uv');
-  const uTime  = gl.getUniformLocation(prog, 'u_time');
-  const uMouse = gl.getUniformLocation(prog, 'u_mouse');
-  const uColor = gl.getUniformLocation(prog, 'u_color');
-  const uTex   = gl.getUniformLocation(prog, 'u_tex');
+   /* ── uniform / attribute locations ── */
+   const aPos   = gl.getAttribLocation(prog, 'a_pos');
+   const aUV    = gl.getAttribLocation(prog, 'a_uv');
+   const uTime  = gl.getUniformLocation(prog, 'u_time');
+   const uMouse = gl.getUniformLocation(prog, 'u_mouse');
+   const uColor = gl.getUniformLocation(prog, 'u_color');
+   const uBroken = gl.getUniformLocation(prog, 'u_broken');
+   const uTex   = gl.getUniformLocation(prog, 'u_tex');
 
   gl.enable(gl.BLEND);
   gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
   gl.clearColor(0, 0, 0, 0);
 
-  /* ── mouse / touch tracking ── */
-  let mx = -1.0, my = -1.0;  /* start off-canvas so no initial glow */
-  let tmx = mx, tmy = my;
+   /* ── mouse / touch tracking ── */
+   let mx = -1.0, my = -1.0;
+   let tmx = mx, tmy = my;
+   
+   /* broken state management */
+   let isBroken = false;
+   let lastMouseDist = 999;
+   let reconstructTimer = null;
+   const reconstructionTime = 3000; /* 3 seconds to reconstruct */
+   
+   function updateMouse(cx, cy) {
+     const r = canvas.getBoundingClientRect();
+     tmx = (cx - r.left)  / r.width;
+     tmy = 1.0 - (cy - r.top) / r.height;
+     
+     const dx = tmx - mx;
+     const dy = tmy - my;
+     const dist = Math.sqrt(dx * dx + dy * dy);
+     lastMouseDist = dist;
+     
+     if (dist < 0.05 && !isBroken) {
+       /* mouse entered area - break the ASCII art */
+       isBroken = true;
+       if (reconstructTimer) {
+         clearTimeout(reconstructTimer);
+         reconstructTimer = null;
+       }
+     }
+   }
 
-  function updateMouse(cx, cy) {
-    const r = canvas.getBoundingClientRect();
-    tmx = (cx - r.left)  / r.width;
-    tmy = 1.0 - (cy - r.top) / r.height;
-  }
-
-  document.addEventListener('mousemove', e => updateMouse(e.clientX, e.clientY));
-  canvas.addEventListener('touchmove', e => {
-    updateMouse(e.touches[0].clientX, e.touches[0].clientY);
-  }, { passive: true });
+   document.addEventListener('mousemove', e => updateMouse(e.clientX, e.clientY));
+   canvas.addEventListener('touchmove', e => {
+     updateMouse(e.touches[0].clientX, e.touches[0].clientY);
+   }, { passive: true });
+   
+   /* check if mouse has left and start reconstruction timer */
+   setInterval(() => {
+     if (isBroken && lastMouseDist > 0.2) {
+       if (!reconstructTimer) {
+         reconstructTimer = setTimeout(() => {
+           isBroken = false;
+         }, reconstructionTime);
+       }
+     } else if (!isBroken) {
+       if (reconstructTimer) {
+         clearTimeout(reconstructTimer);
+         reconstructTimer = null;
+       }
+     }
+   }, 100);
 
   /* ── render loop ── */
   const t0 = performance.now();
@@ -295,10 +339,11 @@ export async function initAsciiWebGL() {
     gl.clear(gl.COLOR_BUFFER_BIT);
     gl.useProgram(prog);
 
-    gl.uniform1f(uTime, time);
-    gl.uniform2f(uMouse, mx, my);
-    gl.uniform3f(uColor, r, g, b);
-    gl.uniform1i(uTex, 0);
+     gl.uniform1f(uTime, time);
+     gl.uniform2f(uMouse, mx, my);
+     gl.uniform3f(uColor, r, g, b);
+     gl.uniform1f(uBroken, isBroken ? 1.0 : 0.0);
+     gl.uniform1i(uTex, 0);
 
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, tex);
