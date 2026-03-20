@@ -1,4 +1,4 @@
-/** WebGL ASCII art animation with interactive mouse effects */
+/** WebGL terminal-like animation with scrolling characters and interactive effects */
 
 const VERT = `
 attribute vec2 a_pos;
@@ -12,6 +12,7 @@ void main() {
 const FRAG = `
 precision mediump float;
 uniform sampler2D u_tex;
+uniform sampler2D u_char_tex;
 uniform float u_time;
 uniform vec2 u_mouse;
 uniform vec3 u_color;
@@ -20,43 +21,53 @@ varying vec2 v_uv;
 void main() {
   vec2 uv = v_uv;
 
+  /* terminal scanline effect */
+  float scanline = sin(uv.y * 120.0 + u_time * 2.0) * 0.03 + 0.97;
+  
+  /* subtle noise */
+  float noise = fract(sin(dot(uv, vec2(12.9898, 78.233))) * 43758.5453) * 0.05;
+
+  /* terminal column effect - scroll characters over time */
+  float scrollOffset = mod(u_time * 0.5 + uv.y * 2.0, 1.0);
+  
+  /* mouse repulsion nudge */
   vec2 delta = uv - u_mouse;
   float dist  = length(delta);
-
-  /* gentle wave ripple */
-  float wx = sin(uv.y * 14.0 + u_time * 1.6) * 0.0022;
-  float wy = cos(uv.x * 11.0 + u_time * 1.3) * 0.0015;
-
-  /* mouse repulsion nudge */
   float push  = smoothstep(0.38, 0.0, dist) * 0.016;
   vec2  repel = normalize(delta + vec2(0.00001, 0.00001)) * push;
 
   /* chromatic aberration near cursor */
   float ca = smoothstep(0.30, 0.0, dist) * 0.0045;
 
-  vec2 uv2 = uv + vec2(wx, wy) + repel;
+  vec2 uv2 = uv + repel;
 
+  /* read from main texture with scanning and slight distortion */
   float aR = texture2D(u_tex, uv2 + vec2( ca, 0.0)).a;
   float aG = texture2D(u_tex, uv2               ).a;
   float aB = texture2D(u_tex, uv2 - vec2( ca, 0.0)).a;
+  
+  /* add terminal glow effect */
+  vec3 baseColor = vec3(aR, aG, aB) * u_color;
   float alpha = max(aR, max(aG, aB));
 
-  /* colour wave */
-  float wave  = sin(uv.x * 5.0 - u_time * 0.75) * 0.5 + 0.5;
-  float wave2 = cos(uv.y * 4.0 + u_time * 0.50) * 0.5 + 0.5;
+  /* terminal cursor blink effect at mouse position */
+  float cursorBlink = mod(floor(u_time * 5.0), 2.0);
+  float cursorDist = length(uv - u_mouse);
+  float cursorEffect = smoothstep(0.02, 0.0, cursorDist) * cursorBlink;
+  baseColor += cursorEffect * vec3(1.0, 1.0, 1.0);
 
-  vec3 alt = vec3(u_color.z * 0.80,
-                  u_color.x * 0.50 + u_color.y * 0.50,
-                  u_color.y * 0.55 + u_color.z * 0.45);
+  /* introduce character distortion based on time */
+  float charDistortion = sin(u_time * 3.0 + uv.x * 20.0) * 0.02;
+  
+  /* terminal text flicker effect */
+  float flicker = fract(sin(u_time * 60.0 + uv.y * 50.0) * 0.5) * 0.1;
+  
+  /* mouse glow effect */
+  float glow = smoothstep(0.25, 0.0, dist);
+  baseColor = baseColor + (vec3(1.0) - baseColor) * glow * 0.30;
 
-  vec3 col = mix(u_color, alt, wave * 0.45);
-  col *= 0.82 + wave2 * 0.18;
-
-  /* mouse glow */
-  float glow = smoothstep(0.30, 0.0, dist);
-  col = col + (1.0 - col) * glow * 0.50;
-
-  vec3 final = vec3(aR, aG, aB) * col;
+  /* combine all terminal effects */
+  vec3 final = (baseColor + charDistortion) * scanline + noise + flicker;
   gl_FragColor = vec4(final, alpha);
 }`;
 
@@ -156,6 +167,10 @@ const ASCII_LINES = [
   ' \u2588\u2588\u2554\u2550\u2550\u255d   \u2588\u2588\u2551      \u2588\u2588\u2551 \u2588\u2588\u2554\u2550\u2550\u2588\u2588\u2551 \u2588\u2588\u2554\u2550\u2550\u2550\u255d  \u2588\u2588\u2554\u2550\u2550\u255d',
   ' \u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2557 \u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2557 \u2588\u2588\u2551 \u2588\u2588\u2551  \u2588\u2588\u2551 \u2588\u2588\u2551      \u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2557',
   ' \u255a\u2550\u2550\u2550\u2550\u2550\u2550\u255d \u255a\u2550\u2550\u2550\u2550\u2550\u2550\u255d \u255a\u2550\u255d \u255a\u2550\u255d  \u255a\u2550\u255d \u255a\u2550\u255d      \u255a\u2550\u2550\u2550\u2550\u2550\u2550\u255d',
+  '',
+  '', 
+  '  terminal> _         [move mouse to interact]',
+  '',
 ];
 
 export async function initAsciiWebGL() {
