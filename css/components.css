@@ -800,6 +800,38 @@ footer span {
   margin-bottom: 1.5rem;
 }
 
+.blog-post-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 2rem 0;
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.blog-post-content figure {
+  margin: 2rem 0;
+}
+
+.blog-post-content figcaption {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-top: 0.75rem;
+}
+
+.blog-post-header figure {
+  margin: 2rem 0 1.5rem 0;
+}
+
+.blog-post-header img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
 .blog-post-footer {
   margin-top: 3rem;
   padding-top: 2rem;
