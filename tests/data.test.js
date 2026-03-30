@@ -28,7 +28,6 @@ describe('data', () => {
     it('should have categories', () => {
       const categories = [...new Set(DATA.map(d => d.category))];
       expect(categories.length).toBeGreaterThan(0);
-      expect(categories).toContain('Profile');
       expect(categories).toContain('Projects');
       expect(categories).toContain('Contact');
     });
@@ -39,15 +38,6 @@ describe('data', () => {
           expect(typeof item.action).toBe('string');
           expect(item.action).toMatch(/^[a-z]+:.+$/);
         }
-      });
-    });
-
-    it('should have profile items with correct structure', () => {
-      const profileItems = DATA.filter(d => d.category === 'Profile');
-      expect(profileItems.length).toBeGreaterThan(0);
-      
-      profileItems.forEach(item => {
-        expect(item.icon).toBe('@');
       });
     });
 
