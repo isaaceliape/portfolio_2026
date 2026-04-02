@@ -64,21 +64,21 @@ export const DATA = [
     icon: "▶",
     title: "touch-typing-tool",
     sub: "Practice typing speed",
-    action: "open:https://isaaceliape.github.io/typee/",
+    action: "open:projects/touch-typing-tool.html",
   },
   {
     category: "Projects",
     icon: "▶",
     title: "mark-board",
     sub: "File-based Kanban with AI",
-    action: "open:https://github.com/isaaceliape/mark-board",
+    action: "open:projects/mark-board.html",
   },
   {
     category: "Projects",
     icon: "▶",
     title: "splitfair",
     sub: "Bill splitting for groups",
-    action: "open:https://isaaceliape.github.io/splitfair-app/",
+    action: "open:projects/splitfair.html",
   },
   {
     category: "Projects",
@@ -151,8 +151,11 @@ export function resolveAction(item, context) {
       return () => {
         if (value.startsWith("mailto:")) {
           window.location.href = value;
-        } else {
+        } else if (value.startsWith("http://") || value.startsWith("https://")) {
           window.open(value, "_blank");
+        } else {
+          // Relative URL - navigate in same window
+          window.location.href = value;
         }
       };
     default:
